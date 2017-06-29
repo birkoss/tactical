@@ -34,7 +34,12 @@ GAME.Main.prototype.createMap = function() {
 };
 
 GAME.Main.prototype.createUnits = function() {
+    let command = new Command();
+    command.target = Command.Target.Foe;
+    command.action = Command.Action.Attack;
+
     let unit = new Unit(this.game);
+    unit.addCommand(command);
     unit.gridX = 5;
     unit.gridY = 5;
     this.map.addUnit(unit);
@@ -45,14 +50,31 @@ GAME.Main.prototype.createUnits = function() {
     this.map.addUnit(unit);
 };
 
-
 GAME.Main.prototype.unitStartAction = function(unit) {
-    console.log("A Unit is ready at " + unit.gridX + "x" + unit.gridY);
     this.activeUnit = unit;
+console.log("start action...");
+    this.unitExecuteCommand();
+};
 
-    let tween = this.game.add.tween(unit.scale).to({x:2, y:2}, 800);
-    tween.onComplete.add(this.unitStopAction, this);
-    tween.start();
+GAME.Main.prototype.unitExecuteCommand = function() {
+    let command = null;
+
+    this.activeUnit.commands.forEach(function(single_command) {
+        if (command == null) {
+            switch (single_command.action) {
+                case Command.Action.Attack:
+                    console.log("Trying to attack...");
+                    break;
+                case Command.Action.Heal:
+                    break;
+            }
+        }
+    }, this);
+
+    if (command == null) {
+        /* No command found, skip it */
+        this.unitStopAction();
+    }
 };
 
 GAME.Main.prototype.unitStopAction = function() {

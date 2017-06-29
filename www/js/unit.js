@@ -4,6 +4,8 @@ function Unit(game) {
     this.backgroundContainer = this.game.add.group();
     this.addChild(this.backgroundContainer);
 
+    this.commands = [];
+
     this.clearATB();
 };
 
@@ -16,22 +18,30 @@ Unit.prototype.setSprite = function(themeName) {
     image.tint = 0xff0000;
 };
 
-Unit.prototype.getATBMax = function() {
-    return 100;
-};
-
-Unit.prototype.getATBFillRate = function() {
-    return 1;
-};
-
-Unit.prototype.updateATB = function() {
-    this.ATB = Math.min(this.ATB + this.getATBFillRate(), this.getATBMax());
-};
+/* ATB */
 
 Unit.prototype.clearATB = function() {
     this.ATB = 0;
 };
 
+Unit.prototype.getMaxATB = function() {
+    return 100;
+};
+
+Unit.prototype.getFillRateATB = function() {
+    return 1;
+};
+
 Unit.prototype.isReady = function() {
-    return (this.ATB >= this.getATBMax());
+    return (this.ATB >= this.getMaxATB());
+};
+
+Unit.prototype.updateATB = function() {
+    this.ATB = Math.min(this.ATB + this.getFillRateATB(), this.getMaxATB());
+};
+
+/* Commands */
+
+Unit.prototype.addCommand = function(command) {
+    this.commands.push(command);
 };
