@@ -25,7 +25,7 @@ GAME.Main.prototype.createMap = function() {
     this.map = new Map(this.game);
     this.map.onUnitReady.add(this.unitStartAction, this);
 
-    this.map.createGrid(8, 8);
+    this.map.createGrid(6, 8);
     this.map.setTheme("forest");
 
     this.map.generate();
@@ -111,12 +111,27 @@ GAME.Main.prototype.unitStartAttack = function(attacker, defender) {
     /* Always be on top of the defender */
     attacker.parent.bringToTop(attacker);
 
-    let tween = this.game.add.tween(attacker).to({x:defender.x, y:defender.y}, 400, Phaser.Easing.Elastic.Out);
-    tween.onComplete.add(this.unitStopAttack, this);
+    let tween = this.game.add.tween(attacker).to({x:defender.x, y:defender.y}, 400, Phaser.Easing.Elastic.In);
+    tween.onComplete.add(this.unitAnimateAttack, this);
     tween.start();
 };
 
-GAME.Main.prototype.unitStopAttack = function(attacker) {
+GAME.Main.prototype.unitAnimateAttack = function(attacker) {
+    let effect = this.map.effectsContainer.create(attacker.x, attacker.y, "effect:attack");
+    effect.attacker = attacker;
+    effect.scale.set(2);
+
+    let animation = effect.animations.add("attack", [0, 1, 0, 1], 8);
+    animation.onComplete.add(this.unitStopAttack, this);
+    
+    effect.animations.play("attack");
+};
+
+GAME.Main.prototype.unitStopAttack = function(effect) {
+    effect.destroy();
+
+    let attacker = effect.attacker;
+
     let tween = this.game.add.tween(attacker).to({x:attacker.originalX, y:attacker.originalY}, 400, Phaser.Easing.Elastic.Out);
     tween.onComplete.add(this.unitStopAction, this);
     tween.start();

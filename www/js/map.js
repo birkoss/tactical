@@ -7,6 +7,9 @@ function Map(game) {
     this.unitsContainer = this.game.add.group();
     this.addChild(this.unitsContainer);
 
+    this.effectsContainer = this.game.add.group();
+    this.addChild(this.effectsContainer);
+
     this.onUnitReady = new Phaser.Signal();
 };
 

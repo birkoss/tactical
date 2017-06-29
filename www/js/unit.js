@@ -22,9 +22,9 @@ Unit.Team = {
 };
 
 Unit.prototype.setSprite = function(themeName) {
-    let image = this.backgroundContainer.create(0, 0, "tile:blank");
-    image.scale.set(4);
-    image.tint = (this.team == Unit.Team.Player ? 0x0000ff : 0xff0000);
+    let image = this.backgroundContainer.create(0, 0, "unit:knight");
+    image.scale.set(2);
+    //image.tint = (this.team == Unit.Team.Player ? 0x0000ff : 0xff0000);
 };
 
 Unit.prototype.getAttackRange = function() {

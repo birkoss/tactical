@@ -12,14 +12,13 @@ Tile.prototype = Object.create(Phaser.Group.prototype);
 Tile.prototype.constructor = Tile;
 
 Tile.prototype.setBackground = function(themeName) {
-    let image = this.backgroundContainer.create(0, 0, "tile:blank");
-    image.scale.set(4);
-    image.tint = 0x00cc00;
+    let image = this.backgroundContainer.create(0, 0, "tile:grass");
+    image.scale.set(2);
 };
 
 Tile.prototype.setBorder = function() {
     let border = this.borderContainer.create(0, 0, "tile:border");
-    border.scale.set(3);
+    border.scale.set(2);
     border.alpha = 0.3;
     border.x = ((this.backgroundContainer.width - border.width) / 2);
     border.y = ((this.backgroundContainer.height - border.height) / 2);
