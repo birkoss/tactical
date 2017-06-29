@@ -6,6 +6,8 @@ GAME.Main = function() {
 GAME.Main.prototype.create = function() {
     this.mapContainer = this.game.add.group();
     this.createMap();
+
+    this.createUnits();
 };
 
 GAME.Main.prototype.createMap = function() {
@@ -17,4 +19,8 @@ GAME.Main.prototype.createMap = function() {
     this.map.generate();
 
     this.mapContainer.addChild(this.map);
-}
+};
+
+GAME.Main.prototype.createUnits = function() {
+
+};

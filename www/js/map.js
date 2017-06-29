@@ -1,8 +1,8 @@
 function Map(game) {
     Phaser.Group.call(this, game);
 
-    this.backgroundContainer = this.game.add.group();
-    this.addChild(this.backgroundContainer);
+    this.tilesContainer = this.game.add.group();
+    this.addChild(this.tilesContainer);
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
@@ -31,21 +31,18 @@ Map.prototype.generate = function() {
 
     for (gridY=0; gridY<this.gridHeight; gridY++) {
         for (gridX=0; gridX<this.gridWidth; gridX++) {
-            image = this.backgroundContainer.create(0, 0, "tile:blank");
-            image.scale.set(4);
-            image.tint = 0x00cc00;
-            image.x = gridX * image.width;
-            image.y = gridY * image.height;
+            let tile = new Tile(this.game);
+            tile.setBackground();
 
-            let border = this.backgroundContainer.create(0, 0, "tile:border");
-            border.scale.set(3);
-            if (gridX > 0 && gridY > 0) {
-                border.alpha = 0.1;
-            } else {
-                border.alpha = 0.3;
-            }
-            border.x = image.x + ((image.width - border.width) / 2);
-            border.y = image.y + ((image.height - border.height) / 2);
+            tile.x = gridX * tile.width;
+            tile.y = gridY * tile.height;
+
+            tile.gridX = gridX;
+            tile.gridY = gridY;
+
+            this.tilesContainer.addChild(tile);
+
+            tile.setBorder(false);
 
         }
     }
