@@ -45,8 +45,9 @@ GAME.Main.prototype.createUnits = function() {
     this.map.addUnit(unit);
 
     unit = new Unit(this.game, Unit.Team.Enemy);
-    unit.gridX = 2;
-    unit.gridY = 2;
+    unit.addCommand(command);
+    unit.gridX = 4;
+    unit.gridY = 5;
     this.map.addUnit(unit);
 };
 
@@ -77,6 +78,11 @@ GAME.Main.prototype.unitExecuteCommand = function() {
             switch (single_command.action) {
                 case Command.Action.Attack:
                     let units = this.map.getUnits(target, {gridX:this.activeUnit.gridX, gridY:this.activeUnit.gridY}, this.activeUnit.getAttackRange());
+                    if (units.length > 0) {
+                        command = true;
+                        this.unitStartAttack(this.activeUnit, units[0]);
+                        //this.activeUnit.attackUnit(units[0]);
+                    }
                     units.forEach(function(single_unit) {
                         console.log(" = " + single_unit.team + " -> " + single_unit.gridX + "x" + single_unit.gridY);
                     }, this);
@@ -96,4 +102,22 @@ GAME.Main.prototype.unitExecuteCommand = function() {
 GAME.Main.prototype.unitStopAction = function() {
     this.activeUnit.clearATB();
     this.activeUnit = null;
+};
+
+GAME.Main.prototype.unitStartAttack = function(attacker, defender) {
+    attacker.originalX = attacker.x;
+    attacker.originalY = attacker.y;
+
+    /* Always be on top of the defender */
+    attacker.parent.bringToTop(attacker);
+
+    let tween = this.game.add.tween(attacker).to({x:defender.x, y:defender.y}, 400, Phaser.Easing.Elastic.Out);
+    tween.onComplete.add(this.unitStopAttack, this);
+    tween.start();
+};
+
+GAME.Main.prototype.unitStopAttack = function(attacker) {
+    let tween = this.game.add.tween(attacker).to({x:attacker.originalX, y:attacker.originalY}, 400, Phaser.Easing.Elastic.Out);
+    tween.onComplete.add(this.unitStopAction, this);
+    tween.start();
 };

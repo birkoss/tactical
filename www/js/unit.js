@@ -58,3 +58,17 @@ Unit.prototype.updateATB = function() {
 Unit.prototype.addCommand = function(command) {
     this.commands.push(command);
 };
+
+Unit.prototype.attackUnit = function(target) {
+    this.originalX = this.x;
+    this.originalY = this.y;
+
+    let tween = this.game.add.tween(this).to({x:target.x, y:target.y}, 400, Phaser.Easing.Elastic.Out);
+    tween.onComplete.add(this.attackUnitEnd, this);
+    tween.start();
+};
+
+Unit.prototype.attackUnitEnd = function() {
+    let tween = this.game.add.tween(this).to({x:this.originalX, y:this.originalY}, 400, Phaser.Easing.Elastic.Out);
+    tween.start();
+};
