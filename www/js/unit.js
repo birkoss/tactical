@@ -16,15 +16,32 @@ function Unit(game, newTeam) {
 Unit.prototype = Object.create(Phaser.Group.prototype);
 Unit.prototype.constructor = Unit;
 
+Unit.Facing = {
+    Left: 2,
+    Right: -2
+};
+
 Unit.Team = {
     Player: 1,
     Enemy: 2
 };
 
 Unit.prototype.setSprite = function(themeName) {
+    this.facing = Unit.Facing.Left;
+
     let image = this.backgroundContainer.create(0, 0, "unit:knight");
+    image.anchor.setTo(0.5, 0.5);
     image.scale.set(2);
+    image.x += image.width/2;
+    image.y += image.height/2;
     //image.tint = (this.team == Unit.Team.Player ? 0x0000ff : 0xff0000);
+};
+
+Unit.prototype.face = function(newFacing) {
+    if (this.facing != newFacing) {
+        this.backgroundContainer.getChildAt(0).scale.x = newFacing;
+        this.facing = newFacing;
+    }
 };
 
 Unit.prototype.getAttackRange = function() {

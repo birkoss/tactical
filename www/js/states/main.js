@@ -105,8 +105,12 @@ GAME.Main.prototype.unitStopAction = function() {
 };
 
 GAME.Main.prototype.unitStartAttack = function(attacker, defender) {
+    /* Save the original position (to come back there after) */
     attacker.originalX = attacker.x;
     attacker.originalY = attacker.y;
+
+    /* Face the right way depending of the defender */
+    attacker.face(attacker.x > defender.x ? Unit.Facing.Left : Unit.Facing.Right);
 
     /* Always be on top of the defender */
     attacker.parent.bringToTop(attacker);
@@ -121,7 +125,7 @@ GAME.Main.prototype.unitAnimateAttack = function(attacker) {
     effect.attacker = attacker;
     effect.scale.set(2);
 
-    let animation = effect.animations.add("attack", [0, 1, 0, 1], 8);
+    let animation = effect.animations.add("attack", [0, 1, 0, 1, 0, 1], 8);
     animation.onComplete.add(this.unitStopAttack, this);
     
     effect.animations.play("attack");
