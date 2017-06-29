@@ -1,4 +1,4 @@
-function Unit(game) {
+function Unit(game, newTeam) {
     Phaser.Group.call(this, game);
 
     this.backgroundContainer = this.game.add.group();
@@ -6,16 +6,29 @@ function Unit(game) {
 
     this.commands = [];
 
+    this.attackRange = 1;
+
+    this.team = newTeam;
+
     this.clearATB();
 };
 
 Unit.prototype = Object.create(Phaser.Group.prototype);
 Unit.prototype.constructor = Unit;
 
+Unit.Team = {
+    Player: 1,
+    Enemy: 2
+};
+
 Unit.prototype.setSprite = function(themeName) {
     let image = this.backgroundContainer.create(0, 0, "tile:blank");
     image.scale.set(4);
-    image.tint = 0xff0000;
+    image.tint = (this.team == Unit.Team.Player ? 0x0000ff : 0xff0000);
+};
+
+Unit.prototype.getAttackRange = function() {
+    return this.attackRange;
 };
 
 /* ATB */

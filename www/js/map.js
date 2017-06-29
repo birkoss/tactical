@@ -81,3 +81,28 @@ Map.prototype.updateUnits = function() {
         this.onUnitReady.dispatch(unit);
     }
 };
+
+Map.prototype.getUnits = function(target, position, range) {
+    return this.unitsContainer.filter(function(single_unit) {
+        if (target != null) {
+            /* Should be an Ally, and is not */
+            if (target > 0 && target != single_unit.team) {
+                return false;
+            }
+            /* Should be a Fow, and is not */
+            if (target < 0 && Math.abs(target) == single_unit.team) {
+                return false;
+            }
+            /* @TODO Should be itself */
+        }
+
+        if (position != null && range != null) {
+            /* Should be in range, and is not */
+            if (Math.abs(single_unit.gridX - position.gridX) + Math.abs(single_unit.gridY - position.gridY) > range) {
+                return false;
+            }
+        }
+
+        return true;
+    }, this).list;
+};

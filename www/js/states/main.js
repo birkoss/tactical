@@ -38,13 +38,13 @@ GAME.Main.prototype.createUnits = function() {
     command.target = Command.Target.Foe;
     command.action = Command.Action.Attack;
 
-    let unit = new Unit(this.game);
+    let unit = new Unit(this.game, Unit.Team.Player);
     unit.addCommand(command);
     unit.gridX = 5;
     unit.gridY = 5;
     this.map.addUnit(unit);
 
-    unit = new Unit(this.game);
+    unit = new Unit(this.game, Unit.Team.Enemy);
     unit.gridX = 2;
     unit.gridY = 2;
     this.map.addUnit(unit);
@@ -61,9 +61,25 @@ GAME.Main.prototype.unitExecuteCommand = function() {
 
     this.activeUnit.commands.forEach(function(single_command) {
         if (command == null) {
+            let target = null;
+            switch (single_command.target) {
+                case Command.Target.Itself:
+                    target = 0;
+                    break;
+                case Command.Target.Foe:
+                    target = this.activeUnit.team * -1;
+                    break;
+                case Command.Target.Ally:
+                    target = this.activeUnit.team;
+                    break;
+            }
+
             switch (single_command.action) {
                 case Command.Action.Attack:
-                    console.log("Trying to attack...");
+                    let units = this.map.getUnits(target, {gridX:this.activeUnit.gridX, gridY:this.activeUnit.gridY}, this.activeUnit.getAttackRange());
+                    units.forEach(function(single_unit) {
+                        console.log(" = " + single_unit.team + " -> " + single_unit.gridX + "x" + single_unit.gridY);
+                    }, this);
                     break;
                 case Command.Action.Heal:
                     break;
