@@ -66,13 +66,13 @@ GAME.Main.prototype.createUnits = function() {
     command.target = Command.Target.Foe;
     command.action = Command.Action.Attack;
 
-    let unit = new Unit(this.game, Unit.Team.Player);
+    let unit = new Unit(this.game, "knight", Unit.Team.Player);
     unit.addCommand(command);
     unit.gridX = 5;
     unit.gridY = 5;
     this.map.addUnit(unit);
 
-    unit = new Unit(this.game, Unit.Team.Enemy);
+    unit = new Unit(this.game, "knight", Unit.Team.Enemy);
     unit.addCommand(command);
     unit.gridX = 4;
     unit.gridY = 5;

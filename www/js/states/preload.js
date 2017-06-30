@@ -29,8 +29,14 @@ GAME.Preload.prototype = {
         this.load.bitmapFont('font:guiOutline', 'fonts/guiOutline.png', 'fonts/guiOutline.xml');
         this.load.bitmapFont('font:gui', 'fonts/gui.png', 'fonts/gui.xml');
 
+        this.load.json("data:items", "data/items.json");
+        this.load.json("data:units", "data/units.json");
     },
     create: function() {
+        GAME.json = {};
+        GAME.json['items'] = this.cache.getJSON("data:items");
+        GAME.json['units'] = this.cache.getJSON("data:units");
+
         this.state.start("Main");
     }
 };

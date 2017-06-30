@@ -1,5 +1,7 @@
-function Unit(game, newTeam) {
+function Unit(game, unitID, newTeam) {
     Entity.call(this, game, "unit");
+
+    this.entityID = unitID;
 
     this.onDeath = new Phaser.Signal();
 

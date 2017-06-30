@@ -69,10 +69,10 @@ Map.prototype.generate = function() {
     image.events.onInputUp.add(this.releaseItem, this);
 };
 
-Map.prototype.addItem = function(itemSprite, gridX, gridY) {
+Map.prototype.addItem = function(itemID, gridX, gridY) {
     if (this.getItemAt(gridX, gridY).length == 0) {
         let item = new Entity(this.game, "item");
-        item.setSprite("item:" + itemSprite);
+        item.load(itemID);
         item.draw(gridX, gridY);
 
         this.itemsContainer.addChild(item);
@@ -81,7 +81,7 @@ Map.prototype.addItem = function(itemSprite, gridX, gridY) {
 
 Map.prototype.addUnit = function(unit) {
     unit.onDeath.add(this.removeUnit, this);
-    unit.setSprite("unit:knight");
+    unit.load(unit.entityID);
     unit.draw();
 
     this.unitsContainer.addChild(unit);
