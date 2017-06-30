@@ -6,6 +6,9 @@ function Tile(game) {
 
     this.borderContainer = this.game.add.group();
     this.addChild(this.borderContainer);
+
+    this.effectsContainer = this.game.add.group();
+    this.addChild(this.effectsContainer);
 };
 
 Tile.prototype = Object.create(Phaser.Group.prototype);
@@ -22,4 +25,9 @@ Tile.prototype.setBorder = function() {
     border.alpha = 0.3;
     border.x = ((this.backgroundContainer.width - border.width) / 2);
     border.y = ((this.backgroundContainer.height - border.height) / 2);
+};
+
+Tile.prototype.addBlood = function() {
+    let effect = this.effectsContainer.create(0, 0, "effect:blood");
+    effect.scale.set(2);
 };

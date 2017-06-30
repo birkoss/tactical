@@ -3,6 +3,7 @@ function Unit(game, newTeam) {
 
     this.backgroundContainer = this.game.add.group();
     this.addChild(this.backgroundContainer);
+    this.onDeath = new Phaser.Signal();
 
     this.commands = [];
 
@@ -16,6 +17,8 @@ function Unit(game, newTeam) {
     this.currentStats = {
         health: this.stats.health
     };
+
+    this.stats.attack = 1000;
 
     this.team = newTeam;
 
@@ -77,7 +80,7 @@ Unit.prototype.isAlive = function() {
 
 Unit.prototype.die = function() {
     this.clearATB();
-    this.backgroundContainer.getChildAt(0).loadTexture("effect:dead");
+    this.onDeath.dispatch(this);
 };
 
 /* ATB */

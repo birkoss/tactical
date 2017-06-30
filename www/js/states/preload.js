@@ -13,7 +13,7 @@ GAME.Preload.prototype = {
         this.load.image('unit:knight', 'images/tiles/units/knight.png');
 
         this.load.spritesheet('effect:attack', 'images/tiles/effects/attack.png', 24, 24);
-        this.load.image('effect:dead', 'images/tiles/effects/dead.png');
+        this.load.image('effect:blood', 'images/tiles/effects/blood.png');
 
         this.load.image('tile:arrow', 'images/tiles/arrow.png');
         this.load.image('tile:blank', 'images/tiles/blank.png');

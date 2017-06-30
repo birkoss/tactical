@@ -19,15 +19,6 @@ Map.prototype.constructor = Map;
 Map.prototype.createGrid = function(gridWidth, gridHeight) {
     this.gridWidth = gridWidth;
     this.gridHeight = gridHeight;
-
-    this.grid = [];
-    for (gridY=0; gridY<this.gridHeight; gridY++) {
-        let row = [];
-        for (gridX=0; gridX<this.gridWidth; gridX++) {
-            row.push(0);
-        }
-        this.grid.push(row);
-    }
 };
 
 Map.prototype.setTheme = function(themeName) {
@@ -37,7 +28,9 @@ Map.prototype.setTheme = function(themeName) {
 Map.prototype.generate = function() {
     let image;
 
+    this.grid = [];
     for (gridY=0; gridY<this.gridHeight; gridY++) {
+        let row = [];
         for (gridX=0; gridX<this.gridWidth; gridX++) {
             let tile = new Tile(this.game);
             tile.setBackground();
@@ -52,17 +45,29 @@ Map.prototype.generate = function() {
 
             tile.setBorder(false);
 
+            row.push(tile);
         }
+        this.grid.push(row);
     }
 };
 
 Map.prototype.addUnit = function(unit) {
+    unit.onDeath.add(this.removeUnit, this);
     unit.setSprite();
 
     unit.x = unit.gridX * unit.width;
     unit.y = unit.gridY * unit.height;
 
     this.unitsContainer.addChild(unit);
+};
+
+Map.prototype.removeUnit = function(unit) {
+    console.log(this);
+    console.log(unit.gridX + "x" + unit.gridY);
+    console.log(this.grid);
+    this.grid[unit.gridY][unit.gridX].addBlood();
+    this.unitsContainer.remove(unit);
+    unit.destroy();
 };
 
 Map.prototype.updateUnits = function() {
