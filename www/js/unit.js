@@ -9,14 +9,13 @@ function Unit(game, unitID, newTeam) {
 
     this.attackRange = 1;
 
-    this.stats = {
+    this.baseStats = {
         attack: 10,
         defense: 7,
         health: 15
     };
-    this.currentStats = {
-        health: this.stats.health
-    };
+    this.stats = {};
+
     this.xp = {
         base: 10,
         factor: 2,
@@ -25,6 +24,11 @@ function Unit(game, unitID, newTeam) {
     };
 
     this.setLevel(1);
+
+    this.currentStats = {
+        health: this.stats.health
+    };
+
 
     this.team = newTeam;
 
@@ -67,9 +71,32 @@ Unit.prototype.die = function() {
     this.onDeath.dispatch(this);
 };
 
+/* Level and XP */
+
 Unit.prototype.setLevel = function(newLevel) {
+    console.log("set level:" + newLevel);
     this.level = newLevel;
+
+    /* Calculate next XP */
     this.xp.next = this.xp.base * (Math.pow((this.level+1), this.xp.factor));
+
+    /* Update stats */
+    for (let stat in this.baseStats) {
+        this.stats[stat] = Math.round(this.baseStats[stat] + (this.baseStats[stat] * 0.42) * (this.level-1));
+    }
+};
+
+Unit.prototype.addXP = function(newXP) {
+    this.xp.current += newXP;
+
+    while (this.xp.current > this.xp.next) {
+        this.setLevel(this.level+1);
+    }
+};
+
+Unit.prototype.dropXP = function() {
+    let EP = 10;
+    return 0.02 * this.xp.next * EP + 6;
 };
 
 /* ATB */

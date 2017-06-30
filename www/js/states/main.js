@@ -15,23 +15,6 @@ GAME.Main.prototype.create = function() {
 
     this.containers.push(this.informationContainer);
 
-    let unit1 = new Unit(this.game, "knight");
-    unit1.setLevel(2);
-
-    let unit2 = new Unit(this.game, "knight");
-    unit2.setLevel(1);
-
-    console.log("UNIT1:" + unit1.level + " = " + unit1.xp.next);
-    console.log("UNIT2:" + unit2.level + " = " + unit2.xp.next);
-
-    let ep = 10;
-
-    let gain1 = 0.02 * unit2.xp.next * ep + 6;
-    let gain2 = 0.02 * unit1.xp.next * ep + 6;
-    console.log("1 vs 2 = " + gain1);
-    console.log("2 vs 1 = " + gain2);
-    return;
-
     this.createPanel();
 
     this.createMap();

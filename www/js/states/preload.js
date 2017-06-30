@@ -10,7 +10,7 @@ GAME.Preload.prototype = {
 
         this.load.image('tile:grass', 'images/tiles/grass.png');
 
-        this.load.image('unit:knight', 'images/tiles/units/knight.png');
+        this.load.spritesheet('unit:knight', 'images/tiles/units/knight.png', 24, 24);
 
         this.load.image('item:tree', 'images/tiles/items/tree.png');
 
