@@ -1,6 +1,9 @@
 function Map(game) {
     Phaser.Group.call(this, game);
 
+    this.backgroundContainer = this.game.add.group();
+    this.addChild(this.backgroundContainer);
+
     this.tilesContainer = this.game.add.group();
     this.addChild(this.tilesContainer);
 
@@ -14,6 +17,9 @@ function Map(game) {
     this.addChild(this.effectsContainer);
 
     this.onUnitReady = new Phaser.Signal();
+
+    this.onMapClicked = new Phaser.Signal();
+    this.selectedPosition = null;
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
@@ -52,6 +58,15 @@ Map.prototype.generate = function() {
         }
         this.grid.push(row);
     }
+
+    /* Create a transparent background to track clicks */
+    image = this.backgroundContainer.create(0, 0, "tile:blank");
+    image.alpha = 0;
+    image.width = this.tilesContainer.width;
+    image.height = this.tilesContainer.height;
+    image.inputEnabled = true;
+    image.events.onInputDown.add(this.selectItem, this);
+    image.events.onInputUp.add(this.releaseItem, this);
 };
 
 Map.prototype.addItem = function(itemSprite, gridX, gridY) {
@@ -137,4 +152,46 @@ Map.prototype.getItemAt = function(gridX, gridY) {
     return this.itemsContainer.filter(function(single_item) {
         return (single_item.gridX == gridX && single_item.gridY == gridY);
     }, this).list;
+};
+
+Map.prototype.selectItem = function(item, pointer) {
+    this.selectedPosition = this.getPositionFromXY(pointer.x - this.x, pointer.y - this.y);
+};
+
+Map.prototype.releaseItem = function(item, pointer) {
+    if (this.selectedPosition != null) {
+        let position = this.getPositionFromXY(pointer.x - this.x, pointer.y - this.y);
+
+        if (this.selectedPosition.gridX == position.gridX && this.selectedPosition.gridY == position.gridY) {
+            let items = [];
+
+            /* Verify the items */
+            items = items.concat(this.itemsContainer.filter(function(single_item) {
+                if (single_item.gridX == position.gridX && single_item.gridY == position.gridY) {
+                    return true;
+                }
+                return false;
+            }, this).list);
+
+            /* Verify the units */
+            items = items.concat(this.unitsContainer.filter(function(single_unit) {
+                if (single_unit.gridX == position.gridX && single_unit.gridY == position.gridY) {
+                    return true;
+                }
+                return false;
+            }, this).list);
+
+            if (items.length > 0) {
+                this.onMapClicked.dispatch(items[0]);
+            }
+        }
+    }
+
+    this.selectedPosition = null;
+};
+
+Map.prototype.getPositionFromXY = function(x, y) {
+    let gridX = Math.floor(x / this.tilesContainer.getChildAt(0).width);
+    let gridY = Math.floor(y / this.tilesContainer.getChildAt(0).height);
+    return {gridX:gridX, gridY:gridY};
 };

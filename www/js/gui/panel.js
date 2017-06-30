@@ -1,4 +1,6 @@
-function Panel(game, height) {
+function Panel(game, spriteSheet, height) {
+    this.spriteSheet = (spriteSheet != null ? spriteSheet : "gui:panel");
+
     Phaser.Group.call(this, game);
 
     this.createBackground(height);
@@ -12,7 +14,7 @@ Panel.prototype.createBackground = function(height) {
     this.backgroundContainer = this.game.add.group();
     this.addChild(this.backgroundContainer);
 
-    this.background = new Ninepatch(this.game, "gui:panel");
+    this.background = new Ninepatch(this.game, this.spriteSheet);
     this.background.resize(this.game.width, height);
     this.backgroundContainer.addChild(this.background);
 };

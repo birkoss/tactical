@@ -18,6 +18,7 @@ GAME.Preload.prototype = {
         this.load.image('effect:blood', 'images/tiles/effects/blood.png');
 
         this.load.spritesheet('gui:panel', 'images/gui/panel.png', 24, 24);
+        this.load.spritesheet('gui:information', 'images/gui/information.png', 24, 24);
         this.load.spritesheet('gui:btnNormal', 'images/gui/buttons/btnNormal.png', 12, 12);
         this.load.spritesheet('gui:btnOver', 'images/gui/buttons/btnOver.png', 12, 12);
 

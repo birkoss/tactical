@@ -7,13 +7,16 @@ GAME.Main = function() {
 
 GAME.Main.prototype.create = function() {
     this.panelContainer = this.game.add.group();
+    this.mapContainer = this.game.add.group();
+    this.informationContainer = this.game.add.group();
+
     this.createPanel();
 
-    this.mapContainer = this.game.add.group();
     this.createMap();
     this.createUnits();
 
-    this.isRunning = true;
+
+    //this.isRunning = true;
 };
 
 GAME.Main.prototype.update = function() {
@@ -35,8 +38,9 @@ GAME.Main.prototype.createPanel = function() {
 GAME.Main.prototype.createMap = function() {
     this.map = new Map(this.game);
     this.map.onUnitReady.add(this.unitStartAction, this);
+    this.map.onMapClicked.add(this.showEntity, this);
 
-    this.map.createGrid(6, 8);
+    this.map.createGrid(6, 7);
     this.map.setTheme("forest");
 
     this.map.addItem("tree", 0, 0);
@@ -46,8 +50,10 @@ GAME.Main.prototype.createMap = function() {
     this.map.generate();
 
     this.mapContainer.addChild(this.map);
-    this.mapContainer.x = (this.game.width - this.mapContainer.width) / 2;
-    this.mapContainer.y = this.panelContainer.height + this.mapContainer.x;
+    this.map.x = (this.game.width - this.mapContainer.width) / 2;
+    this.map.y = this.panelContainer.height + this.map.x;
+
+    this.informationContainer.y = this.map.y + this.map.x + this.map.height;
 };
 
 GAME.Main.prototype.createUnits = function() {
@@ -180,4 +186,15 @@ GAME.Main.prototype.unitStopAttack = function(effect) {
 
 GAME.Main.prototype.toggleTime = function() {
     this.isRunning = !this.isRunning;
+};
+
+GAME.Main.prototype.showEntity = function(entity) {
+    /* Pause the game if not already paused */
+    if (this.isRunning) {
+        this.toggleTime();
+    }
+
+    this.information = new Panel(this.game, "gui:information", this.game.height - this.informationContainer.y);
+    this.informationContainer.addChild(this.information);
+    console.log(entity);
 };
