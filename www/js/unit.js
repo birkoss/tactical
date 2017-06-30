@@ -77,6 +77,7 @@ Unit.prototype.isAlive = function() {
 
 Unit.prototype.die = function() {
     this.clearATB();
+    this.backgroundContainer.getChildAt(0).loadTexture("effect:dead");
 };
 
 /* ATB */
