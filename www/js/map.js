@@ -78,7 +78,9 @@ Map.prototype.updateUnits = function() {
     /* Update the ATB if no units are ready */
     if (unit == null) {
         this.unitsContainer.forEach(function(single_unit) {
-            single_unit.updateATB();
+            if (single_unit.isAlive()) {
+                single_unit.updateATB();
+            }
         }, this);
     } else {
         this.onUnitReady.dispatch(unit);
@@ -87,6 +89,11 @@ Map.prototype.updateUnits = function() {
 
 Map.prototype.getUnits = function(target, position, range) {
     return this.unitsContainer.filter(function(single_unit) {
+        /* Never target dead unit */
+        if (!single_unit.isAlive()) {
+            return false;
+        }
+
         if (target != null) {
             /* Should be an Ally, and is not */
             if (target > 0 && target != single_unit.team) {

@@ -8,6 +8,15 @@ function Unit(game, newTeam) {
 
     this.attackRange = 1;
 
+    this.stats = {
+        attack: 10,
+        defense: 7,
+        health: 15
+    };
+    this.currentStats = {
+        health: this.stats.health
+    };
+
     this.team = newTeam;
 
     this.clearATB();
@@ -34,7 +43,6 @@ Unit.prototype.setSprite = function(themeName) {
     image.scale.set(2);
     image.x += image.width/2;
     image.y += image.height/2;
-    //image.tint = (this.team == Unit.Team.Player ? 0x0000ff : 0xff0000);
 };
 
 Unit.prototype.face = function(newFacing) {
@@ -44,8 +52,31 @@ Unit.prototype.face = function(newFacing) {
     }
 };
 
+Unit.prototype.applyDamage = function(damage) {
+    this.currentStats.health = Math.max(0, this.currentStats.health - damage);
+    if (!this.isAlive()) {
+        this.die();
+    }
+};
+
+Unit.prototype.getAttack = function() {
+    return this.stats.attack;
+};
+
+Unit.prototype.getDefense = function() {
+    return this.stats.defense;
+};
+
 Unit.prototype.getAttackRange = function() {
     return this.attackRange;
+};
+
+Unit.prototype.isAlive = function() {
+    return (this.currentStats.health > 0);
+};
+
+Unit.prototype.die = function() {
+    this.clearATB();
 };
 
 /* ATB */
@@ -74,18 +105,4 @@ Unit.prototype.updateATB = function() {
 
 Unit.prototype.addCommand = function(command) {
     this.commands.push(command);
-};
-
-Unit.prototype.attackUnit = function(target) {
-    this.originalX = this.x;
-    this.originalY = this.y;
-
-    let tween = this.game.add.tween(this).to({x:target.x, y:target.y}, 400, Phaser.Easing.Elastic.Out);
-    tween.onComplete.add(this.attackUnitEnd, this);
-    tween.start();
-};
-
-Unit.prototype.attackUnitEnd = function() {
-    let tween = this.game.add.tween(this).to({x:this.originalX, y:this.originalY}, 400, Phaser.Easing.Elastic.Out);
-    tween.start();
 };

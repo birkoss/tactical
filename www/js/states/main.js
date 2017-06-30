@@ -115,12 +115,32 @@ GAME.Main.prototype.unitStartAttack = function(attacker, defender) {
     /* Always be on top of the defender */
     attacker.parent.bringToTop(attacker);
 
+    attacker.target = defender;
     let tween = this.game.add.tween(attacker).to({x:defender.x, y:defender.y}, 400, Phaser.Easing.Elastic.In);
     tween.onComplete.add(this.unitAnimateAttack, this);
     tween.start();
 };
 
 GAME.Main.prototype.unitAnimateAttack = function(attacker) {
+
+    /* Calculate the damage, always at least 1 */
+    let damage = Math.round(Math.max(1, attacker.getAttack() * (attacker.getAttack() / (attacker.getAttack() + attacker.target.getDefense()))));
+    attacker.target.applyDamage(damage);
+
+    /* Show the damage (and auto remove it after) */
+    let damageText = this.game.add.bitmapText(attacker.x + attacker.width/2 - 10, attacker.y, "font:guiOutline", damage, 20);
+    let damageY = damageText.y - attacker.height;
+    let tween = this.game.add.tween(damageText).to({y:damageY}, 500);
+    tween.onComplete.add(function(text) {
+        let tween = this.game.add.tween(text).to({alpha:0}, 400);
+        tween.onComplete.add(function(text) {
+            text.destroy();
+        }, this);
+        tween.start();
+    }, this);
+    tween.start();
+    
+    /* Show the attacking animation */
     let effect = this.map.effectsContainer.create(attacker.x, attacker.y, "effect:attack");
     effect.attacker = attacker;
     effect.scale.set(2);
