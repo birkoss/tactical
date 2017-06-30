@@ -5,16 +5,20 @@ GAME.Main = function() {
     this.activeUnit = null;
 };
 
+GAME.Main.prototype = new AnimatedState();
+
 GAME.Main.prototype.create = function() {
     this.panelContainer = this.game.add.group();
     this.mapContainer = this.game.add.group();
     this.informationContainer = this.game.add.group();
+    this.informationContainer.animation = AnimatedState.Animation.SlideUp;
+
+    this.containers.push(this.informationContainer);
 
     this.createPanel();
 
     this.createMap();
     this.createUnits();
-
 
     //this.isRunning = true;
 };
@@ -38,7 +42,7 @@ GAME.Main.prototype.createPanel = function() {
 GAME.Main.prototype.createMap = function() {
     this.map = new Map(this.game);
     this.map.onUnitReady.add(this.unitStartAction, this);
-    this.map.onMapClicked.add(this.showEntity, this);
+    this.map.onMapClicked.add(this.showInformation, this);
 
     this.map.createGrid(6, 7);
     this.map.setTheme("forest");
@@ -54,6 +58,7 @@ GAME.Main.prototype.createMap = function() {
     this.map.y = this.panelContainer.height + this.map.x;
 
     this.informationContainer.y = this.map.y + this.map.x + this.map.height;
+    this.informationContainer.maxHeight = this.game.height - this.informationContainer.y;
 };
 
 GAME.Main.prototype.createUnits = function() {
@@ -188,13 +193,41 @@ GAME.Main.prototype.toggleTime = function() {
     this.isRunning = !this.isRunning;
 };
 
-GAME.Main.prototype.showEntity = function(entity) {
+GAME.Main.prototype.showInformation = function(entity) {
+    console.log("showInformation");
+    if (entity != null) {
+        this.currentEntity = entity;
+    }
+
     /* Pause the game if not already paused */
     if (this.isRunning) {
         this.toggleTime();
     }
 
-    this.information = new Panel(this.game, "gui:information", this.game.height - this.informationContainer.y);
-    this.informationContainer.addChild(this.information);
-    console.log(entity);
+    /* If an information is already visible */
+    if (this.informationContainer.children.length > 0) {
+        this.hideInformation();
+    } else {
+
+        this.information = new Panel(this.game, "gui:information", this.informationContainer.maxHeight);
+        this.informationContainer.addChild(this.information);
+
+        this.show();
+    }
+};
+
+GAME.Main.prototype.hideInformation = function() {
+    console.log("hideInformation");
+    if (this.information != null) {
+        this.hide(this.resetInformation, this);
+    }
+};
+
+GAME.Main.prototype.resetInformation = function() {
+    console.log("Reset Information");
+    this.informationContainer.removeAll();
+    this.information.destroy();
+    console.log(this.information);
+    console.log(this.informationContainer.children.length);
+    this.showInformation();
 };

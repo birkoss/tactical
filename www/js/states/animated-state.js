@@ -21,20 +21,26 @@ AnimatedState.prototype = {
         this.containers.forEach(function(container) {
             switch (container.animation) {
                 case AnimatedState.Animation.SlideDown:
-                    container.originalY = container.y;
-                    container.destinationY = container.y - this.game.height;
+                    if (container.originalY == null) {
+                        container.originalY = container.y;
+                        container.destinationY = container.y - this.game.height;
+                    }
 
                     container.y = container.destinationY;
                     break;
                 case AnimatedState.Animation.SlideRight:
-                    container.originalX = container.x;
-                    container.destinationX = container.x + this.game.width;
+                    if (container.originalX == null) {
+                        container.originalX = container.x;
+                        container.destinationX = container.x + this.game.width;
+                    }
 
                     container.x = container.destinationX;
                     break;
                 case AnimatedState.Animation.SlideUp:
-                    container.originalY = container.y;
-                    container.destinationY = container.y + container.height;
+                    if (container.originalY == null) {
+                        container.originalY = container.y;
+                        container.destinationY = container.y + container.height;
+                    }
 
                     container.y = container.destinationY;
                     break;
@@ -56,6 +62,9 @@ AnimatedState.prototype = {
     },
     hide: function(callback, context) {
         this.callback = callback;
+        if (context == null) {
+            context = this;
+        }
 
         this.containers.forEach(function(container) {
             let tween = null;
@@ -85,4 +94,5 @@ AnimatedState.prototype = {
         }
     }
 };
+
 
