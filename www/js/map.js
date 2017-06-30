@@ -7,6 +7,9 @@ function Map(game) {
     this.unitsContainer = this.game.add.group();
     this.addChild(this.unitsContainer);
 
+    this.itemsContainer = this.game.add.group();
+    this.addChild(this.itemsContainer);
+
     this.effectsContainer = this.game.add.group();
     this.addChild(this.effectsContainer);
 
@@ -51,6 +54,17 @@ Map.prototype.generate = function() {
     }
 };
 
+Map.prototype.addItem = function(itemSprite, gridX, gridY) {
+    if (this.getItemAt(gridX, gridY).length == 0) {
+       let item = this.itemsContainer.create(0, 0, "item:" + itemSprite);
+       item.scale.set(2);
+       item.gridX = gridX;
+       item.gridY = gridY;
+       item.x = item.gridX * item.width;
+       item.y = item.gridY * item.height;
+    }
+};
+
 Map.prototype.addUnit = function(unit) {
     unit.onDeath.add(this.removeUnit, this);
     unit.setSprite();
@@ -62,9 +76,6 @@ Map.prototype.addUnit = function(unit) {
 };
 
 Map.prototype.removeUnit = function(unit) {
-    console.log(this);
-    console.log(unit.gridX + "x" + unit.gridY);
-    console.log(this.grid);
     this.grid[unit.gridY][unit.gridX].addBlood();
     this.unitsContainer.remove(unit);
     unit.destroy();
@@ -119,5 +130,11 @@ Map.prototype.getUnits = function(target, position, range) {
         }
 
         return true;
+    }, this).list;
+};
+
+Map.prototype.getItemAt = function(gridX, gridY) {
+    return this.itemsContainer.filter(function(single_item) {
+        return (single_item.gridX == gridX && single_item.gridY == gridY);
     }, this).list;
 };

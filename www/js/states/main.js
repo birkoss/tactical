@@ -28,6 +28,10 @@ GAME.Main.prototype.createMap = function() {
     this.map.createGrid(6, 8);
     this.map.setTheme("forest");
 
+    this.map.addItem("tree", 0, 0);
+    this.map.addItem("tree", 5, 4);
+    this.map.addItem("tree", 2, 0);
+
     this.map.generate();
 
     this.mapContainer.addChild(this.map);
