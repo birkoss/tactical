@@ -20,7 +20,7 @@ GAME.Main.prototype.create = function() {
     this.createMap();
     this.createUnits();
 
-    //this.isRunning = true;
+    this.isRunning = true;
 };
 
 GAME.Main.prototype.update = function() {
@@ -138,7 +138,7 @@ GAME.Main.prototype.unitStartAttack = function(attacker, defender) {
     attacker.originalY = attacker.y;
 
     /* Face the right way depending of the defender */
-    attacker.face(attacker.x > defender.x ? Unit.Facing.Left : Unit.Facing.Right);
+    attacker.face(attacker.x > defender.x ? Entity.Facing.Left : Entity.Facing.Right);
 
     /* Always be on top of the defender */
     attacker.parent.bringToTop(attacker);

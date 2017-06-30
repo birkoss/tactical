@@ -82,10 +82,8 @@ Map.prototype.addItem = function(itemSprite, gridX, gridY) {
 
 Map.prototype.addUnit = function(unit) {
     unit.onDeath.add(this.removeUnit, this);
-    unit.setSprite();
-
-    unit.x = unit.gridX * unit.width;
-    unit.y = unit.gridY * unit.height;
+    unit.setSprite("unit:knight");
+    unit.drawAt(unit.gridX, unit.gridY);
 
     this.unitsContainer.addChild(unit);
 };
