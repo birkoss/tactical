@@ -18,8 +18,6 @@ function Unit(game, newTeam) {
         health: this.stats.health
     };
 
-    this.stats.attack = 1000;
-
     this.team = newTeam;
 
     this.clearATB();

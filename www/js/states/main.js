@@ -6,19 +6,30 @@ GAME.Main = function() {
 };
 
 GAME.Main.prototype.create = function() {
+    this.panelContainer = this.game.add.group();
+    this.createPanel();
+
     this.mapContainer = this.game.add.group();
-
     this.createMap();
-
     this.createUnits();
 
     this.isRunning = true;
 };
 
 GAME.Main.prototype.update = function() {
+    this.btnTime.label.setText(this.isRunning ? "Pause" : "Resume");
     if (this.isRunning && this.activeUnit == null) {
         this.map.updateUnits();
     }
+};
+
+GAME.Main.prototype.createPanel = function() {
+    this.panel = new Panel(this.game);
+    this.panelContainer.addChild(this.panel);
+
+    this.btnTime = new PanelButton(this.game, "Pause");
+    this.btnTime.onClicked.add(this.toggleTime, this);
+    this.panel.addButton(this.btnTime);
 };
 
 GAME.Main.prototype.createMap = function() {
@@ -35,6 +46,8 @@ GAME.Main.prototype.createMap = function() {
     this.map.generate();
 
     this.mapContainer.addChild(this.map);
+    this.mapContainer.x = (this.game.width - this.mapContainer.width) / 2;
+    this.mapContainer.y = this.panelContainer.height + this.mapContainer.x;
 };
 
 GAME.Main.prototype.createUnits = function() {
@@ -163,4 +176,8 @@ GAME.Main.prototype.unitStopAttack = function(effect) {
     let tween = this.game.add.tween(attacker).to({x:attacker.originalX, y:attacker.originalY}, 400, Phaser.Easing.Elastic.Out);
     tween.onComplete.add(this.unitStopAction, this);
     tween.start();
+};
+
+GAME.Main.prototype.toggleTime = function() {
+    this.isRunning = !this.isRunning;
 };

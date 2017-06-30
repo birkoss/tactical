@@ -43,10 +43,11 @@ PanelButton.prototype.setImage = function(image) {
 };
 
 PanelButton.prototype.setLabel = function(newLabel) {
-    this.label = this.game.add.bitmapText(0, 0, "font:gui", newLabel, 20);
+    this.label = this.game.add.bitmapText(0, 0, "font:gui", newLabel, 10);
     this.label.anchor.set(0.5, 0.5);
     this.label.x += this.label.width/2;
     this.label.y += this.label.height/2;
+    this.label.y -= 3;
     this.addChild(this.label);
 
     this.background.resize(this.dimension.width, this.dimension.height);
@@ -55,6 +56,8 @@ PanelButton.prototype.setLabel = function(newLabel) {
 
     this.label.x += (this.background.width - this.label.width) / 2;
     this.label.y += (this.background.height - this.label.height) / 2;
+
+    this.label.originalY = this.label.y;
 };
 
 PanelButton.prototype.setSubtitle = function(newSubtitle) {
@@ -74,6 +77,7 @@ PanelButton.prototype.setSubtitle = function(newSubtitle) {
     this.subtitle.y += 10;
 
     this.label.y -= (this.subtitle.height/2) + 4;
+    console.log(this.label.originalY);
 };
 
 PanelButton.prototype.disable = function() {
@@ -88,12 +92,15 @@ PanelButton.prototype.showOver = function(sprite, pointer) {
     if (this.alpha == 1) {
         this.isSelected = true;
         this.background.changeTexture("gui:btnOver" + this.spriteSheet);
+        this.label.y += 5;
     }
 };
 
 PanelButton.prototype.showNormal = function(sprite, pointer) {
     console.log("showNormal");
     this.background.changeTexture("gui:btnNormal" + this.spriteSheet);
+    this.label.y = this.label.originalY;
+    console.log(this.label.originalY);
     if (this.alpha == 1 && this.isSelected && this.click.input.pointerOver()) {
         this.isSelected = false;
         this.onClicked.dispatch(this);

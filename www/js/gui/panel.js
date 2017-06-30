@@ -8,15 +8,13 @@ Panel.prototype = Object.create(Phaser.Group.prototype);
 Panel.prototype.constructor = Panel;
 
 Panel.prototype.createBackground = function(height) {
-    height = (height == null ? 60 : height);
+    height = (height == null ? 72 : height);
     this.backgroundContainer = this.game.add.group();
     this.addChild(this.backgroundContainer);
 
-    this.background = this.backgroundContainer.create(0, 0, "tile:blank");
-    this.background.width = this.game.width;
-    this.background.height = height;
-    this.background.tint = 0xffffff;
-    this.background.alpha = 0.3;
+    this.background = new Ninepatch(this.game, "gui:panel");
+    this.background.resize(this.game.width, height);
+    this.backgroundContainer.addChild(this.background);
 };
 
 Panel.prototype.createTitle = function(label, size) {
@@ -37,9 +35,10 @@ Panel.prototype.addButton = function(button) {
         this.addChild(this.buttonsContainer);
     }
 
-    if (this.buttonsContainer.children.length > 0) {
-        button.x = this.game.width - button.width;
-    }
+    button.x = (this.backgroundContainer.width - button.width) / 2;
+    button.y = (this.backgroundContainer.height - button.height) /2;
+    button.y -= 2;
+
     this.buttonsContainer.addChild(button);
 };
 

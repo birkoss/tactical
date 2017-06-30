@@ -39,7 +39,7 @@ Ninepatch.prototype.init = function() {
     for (let y=0; y<3; y++) {
         for (let x=0; x<3; x++) {
             let sprite = this.backgroundContainer.create(0, 0, this.spriteSheet);
-            sprite.scale.setTo(GAME.scale.sprite*2, GAME.scale.sprite*2);
+            sprite.scale.set(2);
             sprite.frame = (y * 3) + x;
             sprite.x = x * sprite.width;
             sprite.y = y * sprite.height;
