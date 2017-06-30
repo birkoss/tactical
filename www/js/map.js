@@ -71,19 +71,18 @@ Map.prototype.generate = function() {
 
 Map.prototype.addItem = function(itemSprite, gridX, gridY) {
     if (this.getItemAt(gridX, gridY).length == 0) {
-       let item = this.itemsContainer.create(0, 0, "item:" + itemSprite);
-       item.scale.set(2);
-       item.gridX = gridX;
-       item.gridY = gridY;
-       item.x = item.gridX * item.width;
-       item.y = item.gridY * item.height;
+        let item = new Entity(this.game, "item");
+        item.setSprite("item:" + itemSprite);
+        item.draw(gridX, gridY);
+
+        this.itemsContainer.addChild(item);
     }
 };
 
 Map.prototype.addUnit = function(unit) {
     unit.onDeath.add(this.removeUnit, this);
     unit.setSprite("unit:knight");
-    unit.drawAt(unit.gridX, unit.gridY);
+    unit.draw();
 
     this.unitsContainer.addChild(unit);
 };

@@ -20,15 +20,20 @@ Entity.prototype.setSprite = function(spriteName) {
     this.spriteName = spriteName;
 };
 
-Entity.prototype.drawAt = function(gridX, gridY) {
+Entity.prototype.draw = function(gridX, gridY) {
+    if (gridX != null && gridY != null) {
+        this.gridX = gridX;
+        this.gridY = gridY;
+    }
+
     let image = this.backgroundContainer.create(0, 0, this.spriteName);
     image.anchor.setTo(0.5, 0.5);
     image.scale.set(2);
     image.x += image.width/2;
     image.y += image.height/2;
 
-    this.x = gridX * image.width;
-    this.y = gridY * image.height;
+    this.x = this.gridX * image.width;
+    this.y = this.gridY * image.height;
 };
 
 Entity.prototype.face = function(newFacing) {

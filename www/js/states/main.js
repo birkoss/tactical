@@ -20,7 +20,7 @@ GAME.Main.prototype.create = function() {
     this.createMap();
     this.createUnits();
 
-    this.isRunning = true;
+    //this.isRunning = true;
 };
 
 GAME.Main.prototype.update = function() {
@@ -156,6 +156,7 @@ GAME.Main.prototype.unitAnimateAttack = function(attacker) {
     attacker.target.applyDamage(damage);
 
     /* Show the damage (and auto remove it after) */
+    /* TODO Position the text IN the map */
     let damageText = this.game.add.bitmapText(attacker.x + attacker.width/2 - 10, attacker.y, "font:guiOutline", damage, 20);
     let damageY = damageText.y - attacker.height;
     let tween = this.game.add.tween(damageText).to({y:damageY}, 500);
