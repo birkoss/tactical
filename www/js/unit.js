@@ -17,6 +17,14 @@ function Unit(game, unitID, newTeam) {
     this.currentStats = {
         health: this.stats.health
     };
+    this.xp = {
+        base: 10,
+        factor: 2,
+        current: 0,
+        next: 0
+    };
+
+    this.setLevel(1);
 
     this.team = newTeam;
 
@@ -57,6 +65,11 @@ Unit.prototype.isAlive = function() {
 Unit.prototype.die = function() {
     this.clearATB();
     this.onDeath.dispatch(this);
+};
+
+Unit.prototype.setLevel = function(newLevel) {
+    this.level = newLevel;
+    this.xp.next = this.xp.base * (Math.pow((this.level+1), this.xp.factor));
 };
 
 /* ATB */
