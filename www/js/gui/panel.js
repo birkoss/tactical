@@ -70,6 +70,12 @@ Panel.prototype.addStat = function(label, value, max, showProgress) {
 
         let background = this.statsContainer.create(0, 0, "gui:stats");
         this.statsContainer.x = (this.backgroundContainer.width - this.statsContainer.width) / 2;
+
+        let maxHeight = this.title.height + this.statsContainer.height + 18;
+        console.log(maxHeight);
+
+        this.title.y = (this.backgroundContainer.height - maxHeight) / 2;
+        this.statsContainer.y = this.title.y + this.title.height + 6;
     }
 
     let maxWidth = this.background.width - 48;
@@ -113,7 +119,7 @@ Panel.prototype.addStat = function(label, value, max, showProgress) {
     if (subtitle != "") {
         text = this.game.add.bitmapText(text.x, text.y, "font:gui", subtitle, 10);
         text.x += (119 - text.width);
-    this.statsContainer.addChild(text);
+        this.statsContainer.addChild(text);
     } else if (showProgress) {
         let bg = this.statsContainer.create(text.x, text.y + 1, "tile:blank");
         bg.tint = 0x525252;

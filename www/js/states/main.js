@@ -219,8 +219,6 @@ GAME.Main.prototype.showInformation = function(entity) {
                 break;
             case "unit":
                 this.information.createTitle(this.currentEntity.data.name + " (Level " + this.currentEntity.level + ")", 10);
-                this.information.title.y = 18;
-
 
                 this.information.addStat("HP", this.currentEntity.currentStats.health, this.currentEntity.stats.health, true);
                 this.information.addStat("ATB", this.currentEntity.ATB, this.currentEntity.getMaxATB(), true);
