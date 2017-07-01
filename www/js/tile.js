@@ -22,12 +22,21 @@ Tile.prototype.setBackground = function(themeName) {
 Tile.prototype.setBorder = function() {
     let border = this.borderContainer.create(0, 0, "tile:border");
     border.scale.set(2);
-    border.alpha = 0.3;
     border.x = ((this.backgroundContainer.width - border.width) / 2);
     border.y = ((this.backgroundContainer.height - border.height) / 2);
+
+    this.deactivate();
 };
 
 Tile.prototype.addBlood = function() {
     let effect = this.effectsContainer.create(0, 0, "effect:blood");
     effect.scale.set(2);
+};
+
+Tile.prototype.activate = function() {
+    this.borderContainer.getChildAt(0).alpha = 1;
+};
+
+Tile.prototype.deactivate = function() {
+    this.borderContainer.getChildAt(0).alpha = 0.3;
 };

@@ -33,7 +33,6 @@ function Unit(game, unitID, newTeam) {
         health: this.stats.health
     };
 
-
     this.team = newTeam;
 
     this.clearATB();
@@ -68,6 +67,10 @@ Unit.prototype.getAttackRange = function() {
 
 Unit.prototype.isAlive = function() {
     return (this.currentStats.health > 0);
+};
+
+Unit.prototype.canMove = function() {
+    //return this.
 };
 
 Unit.prototype.die = function() {

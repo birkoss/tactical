@@ -25,6 +25,9 @@ GAME.Main.prototype.create = function() {
 
     //this.isRunning = true;
 
+    let popup = new PopupEntity(this.game, this.game.width, 200);
+    popup.addEntity(this.map.unitsContainer.getChildAt(0));
+    popup.show();
 };
 
 GAME.Main.prototype.update = function() {
@@ -203,13 +206,17 @@ GAME.Main.prototype.unitStopAttack = function(effect) {
 
 GAME.Main.prototype.toggleTime = function() {
     if (!this.isRunning && this.information != null) {
-        this.hide();
+        this.hideInformation();
     }
     this.isRunning = !this.isRunning;
 };
 
 GAME.Main.prototype.showInformation = function(entity) {
     if (entity != null) {
+        /* Click on the same entity, do nothing */
+        if (this.currentEntity == entity) {
+            return ;
+        }
         this.currentEntity = entity;
     }
 
@@ -220,8 +227,11 @@ GAME.Main.prototype.showInformation = function(entity) {
 
     /* If an information is already visible */
     if (this.informationContainer.children.length > 0) {
+        this.map.resetTiles();
         this.hideInformation();
     } else {
+        this.map.highlightTile(this.currentEntity.gridX, this.currentEntity.gridY);
+
         this.information = new Panel(this.game, "gui:information", this.informationContainer.maxHeight);
         this.informationContainer.addChild(this.information);
 
@@ -249,6 +259,7 @@ GAME.Main.prototype.showInformation = function(entity) {
 };
 
 GAME.Main.prototype.hideInformation = function() {
+    this.map.resetTiles();
     if (this.information != null) {
         this.hide(this.resetInformation, this);
     }

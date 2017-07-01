@@ -1,31 +1,35 @@
-function Popup(game) {
+function Popup(game, maxWidth, maxHeight) {
     Phaser.Group.call(this, game);
 
-    this.overlayContainer = this.game.add.group();
+    this.backgroundContainer = this.game.add.group();
     this.popupContainer = this.game.add.group();
 
     this.containers = new Array();
 
-    this.maxWidth = this.game.width - 40;
-    this.maxHeight = 0;
-    this.padding = 24;
+    this.maxWidth = (maxWidth != null ? maxWidth : this.game.width - 40);
+    this.maxHeight = (maxHeight != null ? maxHeight : 0);
+    this.verticalAlign = (this.maxHeight == 0 ? "top" : "center");
+    this.padding = 12;
 
-    this.background = this.popupContainer.create(0, 0, "tile:blank");
+    this.setSpriteSheet("gui:information");
 
     this.onPopupShown = new Phaser.Signal();
     this.onPopupHidden = new Phaser.Signal();
 
-    this.listView = null;
-    this.listViewItems = [];
-
-    /* Create a click blocker */
-    this.getContainer("listViewClickBlocker").outside = true;
+    this.isGenerated = false;
 }
 
 Popup.prototype = Object.create(Phaser.Group.prototype);
 Popup.prototype.constructor = Popup;
 
 Popup.SPEED = 800;
+
+Popup.prototype.setSpriteSheet = function(spriteSheet) {
+    this.popupContainer.removeAll(true);
+
+    this.background = new Ninepatch(this.game, spriteSheet);
+    this.popupContainer.addChild(this.background);
+};
 
 Popup.prototype.getContainer = function(containerName) {
     let container = null;
@@ -69,21 +73,6 @@ Popup.prototype.close = function() {
     this.hide();
 };
 
-Popup.prototype.createOverlay = function(opacity, color) {
-    if (opacity == null) {
-        opacity = 0.5;
-    }
-    if (color == null) {
-        color = 0x000000;
-    }
-    let background = this.overlayContainer.create(0, 0, "tile:blank");
-    background.tint = color;
-    background.alpha = opacity;
-    background.width = this.game.width;
-    background.height = this.game.height;
-    background.inputEnabled = true;
-};
-
 Popup.prototype.createTitle = function(label) {
     let group = this.getContainer("title").group;
 
@@ -117,7 +106,14 @@ Popup.prototype.createCloseButton = function() {
 };
 
 Popup.prototype.generate = function() {
-    let containerY = 0;
+    console.log("generate...");
+
+    let totalHeight = (this.containers.length-1) * this.padding;
+    this.containers.forEach(function(singleContainer) {
+        totalHeight += singleContainer.group.height;
+    }, this);
+
+    let containerY = (this.verticalAlign == "center" ? (this.maxHeight - totalHeight)/2 - this.padding : 0);
     this.containers.forEach(function(singleContainer) {
         if (singleContainer.outside == undefined) {
             let paddingBottom = this.padding;
@@ -146,9 +142,7 @@ Popup.prototype.generate = function() {
 
     containerY += this.padding;
 
-    //this.background.resize(this.maxWidth, containerY);
-    this.background.width = this.maxWidth;
-    this.background.height = (this.maxHeight == 0 ? containerY : this.maxHeight);
+    this.background.resize(this.maxWidth, (this.maxHeight == 0 ? containerY : this.maxHeight));
 
     this.popupContainer.x = (this.game.width - this.background.width) /2;
     this.popupContainer.y = (this.game.height - this.background.height) /2;
@@ -157,8 +151,6 @@ Popup.prototype.generate = function() {
     this.popupContainer.originalY = this.popupContainer.y;
 
     this.popupContainer.y = this.popupContainer.destinationY;
-
-    this.show();
 };
 
 Popup.prototype.hide = function(callback) {
@@ -176,6 +168,10 @@ Popup.prototype.hide = function(callback) {
 };
 
 Popup.prototype.show = function() {
+    if (!this.isGenerated) {
+        this.generate();
+    }
+
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED, Phaser.Easing.Exponential.Out);
     tween.onComplete.add(function() {
         this.onPopupShown.dispatch(this);

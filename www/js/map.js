@@ -74,6 +74,7 @@ Map.prototype.addItem = function(itemID, gridX, gridY) {
         let item = new Entity(this.game, "item");
         item.load(itemID);
         item.draw(gridX, gridY);
+        item.type = "item";
 
         this.itemsContainer.addChild(item);
     }
@@ -84,6 +85,7 @@ Map.prototype.addEffect = function(effect) {
 };
 
 Map.prototype.addUnit = function(unit) {
+    unit.type = "unit";
     unit.onDeath.add(this.removeUnit, this);
     unit.load(unit.entityID);
     unit.draw();
@@ -195,4 +197,14 @@ Map.prototype.getPositionFromXY = function(x, y) {
     let gridX = Math.floor(x / this.tilesContainer.getChildAt(0).width);
     let gridY = Math.floor(y / this.tilesContainer.getChildAt(0).height);
     return {gridX:gridX, gridY:gridY};
+};
+
+Map.prototype.highlightTile = function(gridX, gridY) {
+    this.grid[gridY][gridX].activate();
+};
+
+Map.prototype.resetTiles = function() {
+    this.tilesContainer.forEach(function(single_tile) {
+        single_tile.deactivate();
+    }, this);
 };
