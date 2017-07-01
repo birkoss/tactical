@@ -77,7 +77,6 @@ PanelButton.prototype.setSubtitle = function(newSubtitle) {
     this.subtitle.y += 10;
 
     this.label.y -= (this.subtitle.height/2) + 4;
-    console.log(this.label.originalY);
 };
 
 PanelButton.prototype.disable = function() {
@@ -97,10 +96,8 @@ PanelButton.prototype.showOver = function(sprite, pointer) {
 };
 
 PanelButton.prototype.showNormal = function(sprite, pointer) {
-    console.log("showNormal");
     this.background.changeTexture("gui:btnNormal" + this.spriteSheet);
     this.label.y = this.label.originalY;
-    console.log(this.label.originalY);
     if (this.alpha == 1 && this.isSelected && this.click.input.pointerOver()) {
         this.isSelected = false;
         this.onClicked.dispatch(this);

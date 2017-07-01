@@ -109,8 +109,6 @@ Popup.prototype.createCloseButton = function() {
 };
 
 Popup.prototype.generate = function() {
-    console.log("generate...");
-
     let totalHeight = (this.containers.length-1) * this.padding;
     this.containers.forEach(function(singleContainer) {
         totalHeight += singleContainer.group.height;
@@ -155,14 +153,10 @@ Popup.prototype.generate = function() {
 
     this.popupContainer.y = this.popupContainer.destinationY;
 
-    console.log("Original/Destination: " + this.popupContainer.originalY + "/" + this.popupContainer.destinationY);
-
     this.isGenerated = true;
 };
 
 Popup.prototype.hide = function(callback) {
-    console.log("Y:" + this.popupContainer.y);
-
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.destinationY}, Popup.SPEED, Phaser.Easing.Exponential.In);
     tween.onComplete.add(function() {
         this.onPopupHidden.dispatch(this, 0);
