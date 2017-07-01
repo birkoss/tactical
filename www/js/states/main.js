@@ -73,7 +73,19 @@ GAME.Main.prototype.createUnits = function() {
     unit.gridY = 5;
     this.map.addUnit(unit);
 
-    unit = new Unit(this.game, "knight", Unit.Team.Enemy);
+    unit = new Unit(this.game, "archer", Unit.Team.Player);
+    unit.addCommand(command);
+    unit.gridX = 2;
+    unit.gridY = 2;
+    this.map.addUnit(unit);
+
+    unit = new Unit(this.game, "thief", Unit.Team.Player);
+    unit.addCommand(command);
+    unit.gridX = 4;
+    unit.gridY = 1;
+    this.map.addUnit(unit);
+
+    unit = new Unit(this.game, "skeleton", Unit.Team.Enemy);
     unit.addCommand(command);
     unit.gridX = 4;
     unit.gridY = 5;

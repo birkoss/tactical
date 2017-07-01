@@ -1,11 +1,41 @@
 {
+    "archer": {
+        "sprite": "archer",
+        "name": "Archer",
+        "stats": {
+            "attack": 11,
+            "defense": 7,
+            "health": 13
+        },
+        "range": 2
+    },
     "knight": {
         "sprite": "knight",
         "name": "Chevalier",
         "stats": {
-            "attack": 10,
-            "defense": 7,
-            "health": 15
+            "attack": 11,
+            "defense": 8,
+            "health": 14
+        },
+        "range": 1
+    },
+    "skeleton": {
+        "sprite": "skeleton",
+        "name": "Squelette",
+        "stats": {
+            "attack": 13,
+            "defense": 4,
+            "health": 21
+        },
+        "range": 1
+    },
+    "thief": {
+        "sprite": "thief",
+        "name": "Voleur",
+        "stats": {
+            "attack": 7,
+            "defense": 3,
+            "health": 9
         },
         "range": 1
     }
