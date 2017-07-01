@@ -1,5 +1,6 @@
 function AnimatedState() {
     this.containers = [];
+    this.changeSpeed(500);
 };
 
 AnimatedState.Animation = {
@@ -8,14 +9,15 @@ AnimatedState.Animation = {
     SlideRight: "slide_right"
 };
 
-AnimatedState.Speed = 500;
-
 AnimatedState.Dimension = {
     Panel:{width:60, height:60},
     Navigator:{width:40, height:40}
 };
 
 AnimatedState.prototype = {
+    changeSpeed: function(newSpeed) {
+        this.speed = newSpeed;
+    },
     show: function() {
         /* Initialise positions and hide the containers */
         this.containers.forEach(function(container) {
@@ -52,10 +54,10 @@ AnimatedState.prototype = {
             switch (container.animation) {
                 case AnimatedState.Animation.SlideDown:
                 case AnimatedState.Animation.SlideUp:
-                    this.game.add.tween(container).to({y:container.originalY}, AnimatedState.Speed, Phaser.Easing.Exponential.Out).start();
+                    this.game.add.tween(container).to({y:container.originalY}, this.speed, Phaser.Easing.Exponential.Out).start();
                     break;
                 case AnimatedState.Animation.SlideRight:
-                    this.game.add.tween(container).to({x:container.originalX}, AnimatedState.Speed, Phaser.Easing.Exponential.Out).start();
+                    this.game.add.tween(container).to({x:container.originalX}, this.speed, Phaser.Easing.Exponential.Out).start();
                     break;
             }
         }, this);
@@ -71,10 +73,10 @@ AnimatedState.prototype = {
             switch (container.animation) {
                 case AnimatedState.Animation.SlideDown:
                 case AnimatedState.Animation.SlideUp:
-                    tween = this.game.add.tween(container).to({y:container.destinationY}, AnimatedState.Speed, Phaser.Easing.Exponential.In);
+                    tween = this.game.add.tween(container).to({y:container.destinationY}, this.speed, Phaser.Easing.Exponential.In);
                     break;
                 case AnimatedState.Animation.SlideRight:
-                    tween = this.game.add.tween(container).to({x:container.destinationX}, AnimatedState.Speed, Phaser.Easing.Exponential.In);
+                    tween = this.game.add.tween(container).to({x:container.destinationX}, this.speed, Phaser.Easing.Exponential.In);
                     break;
             }
 

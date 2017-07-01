@@ -12,6 +12,7 @@ GAME.Main.prototype.create = function() {
     this.mapContainer = this.game.add.group();
     this.informationContainer = this.game.add.group();
     this.informationContainer.animation = AnimatedState.Animation.SlideUp;
+    this.changeSpeed(250);
 
     this.containers.push(this.informationContainer);
 
@@ -201,6 +202,9 @@ GAME.Main.prototype.unitStopAttack = function(effect) {
 };
 
 GAME.Main.prototype.toggleTime = function() {
+    if (!this.isRunning && this.information != null) {
+        this.hide();
+    }
     this.isRunning = !this.isRunning;
 };
 
