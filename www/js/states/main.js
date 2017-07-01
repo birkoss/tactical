@@ -157,8 +157,8 @@ GAME.Main.prototype.unitAnimateAttack = function(attacker) {
     attacker.target.applyDamage(damage);
 
     /* Show the damage (and auto remove it after) */
-    /* TODO Position the text IN the map */
     let damageText = this.game.add.bitmapText(attacker.x + attacker.width/2 - 10, attacker.y, "font:guiOutline", damage, 20);
+    this.map.addEffect(damageText);
     let damageY = damageText.y - attacker.height;
     let tween = this.game.add.tween(damageText).to({y:damageY}, 500);
     tween.onComplete.add(function(text) {
@@ -196,7 +196,6 @@ GAME.Main.prototype.toggleTime = function() {
 };
 
 GAME.Main.prototype.showInformation = function(entity) {
-    console.log("showInformation");
     if (entity != null) {
         this.currentEntity = entity;
     }
@@ -210,26 +209,42 @@ GAME.Main.prototype.showInformation = function(entity) {
     if (this.informationContainer.children.length > 0) {
         this.hideInformation();
     } else {
-
         this.information = new Panel(this.game, "gui:information", this.informationContainer.maxHeight);
         this.informationContainer.addChild(this.information);
+
+        switch (this.currentEntity.type) {
+            case "item":
+                this.information.createTitle(this.currentEntity.data.name, 10);
+                this.information.createDescription(this.currentEntity.data.description);
+                break;
+            case "unit":
+                this.information.createTitle(this.currentEntity.data.name + " (Level " + this.currentEntity.level + ")", 10);
+                this.information.title.y = 18;
+
+
+                this.information.addStat("HP", this.currentEntity.currentStats.health, this.currentEntity.stats.health, true);
+                this.information.addStat("ATB", this.currentEntity.ATB, this.currentEntity.getMaxATB(), true);
+                this.information.addStat("ATK", this.currentEntity.stats.attack, this.currentEntity.getAttack());
+                this.information.addStat("DEF", this.currentEntity.stats.defense, this.currentEntity.getDefense());
+
+                this.information.statsContainer.y = this.information.title.y + this.information.title.height + 12;
+
+                break;
+        }
+        console.log(this.currentEntity);
 
         this.show();
     }
 };
 
 GAME.Main.prototype.hideInformation = function() {
-    console.log("hideInformation");
     if (this.information != null) {
         this.hide(this.resetInformation, this);
     }
 };
 
 GAME.Main.prototype.resetInformation = function() {
-    console.log("Reset Information");
     this.informationContainer.removeAll();
     this.information.destroy();
-    console.log(this.information);
-    console.log(this.informationContainer.children.length);
     this.showInformation();
 };

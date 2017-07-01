@@ -79,6 +79,10 @@ Map.prototype.addItem = function(itemID, gridX, gridY) {
     }
 };
 
+Map.prototype.addEffect = function(effect) {
+    this.effectsContainer.addChild(effect);
+};
+
 Map.prototype.addUnit = function(unit) {
     unit.onDeath.add(this.removeUnit, this);
     unit.load(unit.entityID);

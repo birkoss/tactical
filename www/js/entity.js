@@ -38,6 +38,7 @@ Entity.prototype.draw = function(gridX, gridY) {
     image.x += image.width/2;
     image.y += image.height/2;
 
+    /* Animation based on the spritesheet */
     image.animations.add("idle");
     image.animations.play("idle", 2, true);
 
