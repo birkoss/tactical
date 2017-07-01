@@ -9,11 +9,15 @@ function Unit(game, unitID, newTeam) {
 
     this.attackRange = 1;
 
+    /* Default stats */
     this.baseStats = {
         attack: 10,
         defense: 7,
         health: 15
     };
+    if (GAME.json.units[this.entityID].stats != null) {
+        this.baseStats = GAME.json.units[this.entityID].stats;
+    }
     this.stats = {};
 
     this.xp = {
