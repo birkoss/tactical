@@ -26,7 +26,7 @@ GAME.Main.prototype.create = function() {
     //this.isRunning = true;
 
     let popup = new PopupEntity(this.game, this.game.width, 200);
-    popup.addEntity(this.map.unitsContainer.getChildAt(0));
+    popup.addEntity(this.map.itemsContainer.getChildAt(0));
     popup.show();
 };
 

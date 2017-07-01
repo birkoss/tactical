@@ -31,16 +31,15 @@ PopupEntity.prototype.addProgressBar = function(x, y, maxWidth, value, max, colo
 };
 
 PopupEntity.prototype.addEntity = function(entity) {
-    console.log("add entity...");
     let title = this.getContainer("title").group;
 
-    let group = this.getContainer("stats").group;
-
+    let text;
     switch (entity.type) {
         case "unit":
-            let text = this.addText(0, 0, entity.data.name + " (LV " + entity.level + ")");
+            text = this.addText(0, 0, entity.data.name + " (LV " + entity.level + ")");
             title.addChild(text);
             
+            let group = this.getContainer("stats").group;
             let background = group.create(0, 0, "gui:stats");
 
             text = this.addText(5, 4, "HP");
@@ -67,50 +66,15 @@ PopupEntity.prototype.addEntity = function(entity) {
             text = this.addText(text.x, text.y, subtitle);
             text.x += (119 - text.width);
             break;
-    }
+        case "item":
+            text = this.addText(0, 0, entity.data.name);
+            title.addChild(text);
+            
+            let description = this.getContainer("description").group;
 
-    /*
-
-    let maxWidth = this.background.width - 48;
-
-    let text = this.game.add.bitmapText(0, 0, "font:gui", label, 10);
-    let subtitle = "";
-
-        case "DEF":
-            text.x = 144;
-            text.y = 33;
-            subtitle = value;
-            if (max > value) {
-                substitle += " (+" + max + ")";
-            }
+            text = this.addText(0, 0, entity.data.description);
+            text.maxWidth = this.maxWidth - 48;
+            description.addChild(text);
             break;
-        default:
-            if (this.statsContainer.children.length > 0) {
-                text.y = this.statsContainer.height;
-            }
     }
-
-    this.statsContainer.addChild(text);
-
-    if (subtitle != "") {
-        text = this.game.add.bitmapText(text.x, text.y, "font:gui", subtitle, 10);
-        text.x += (119 - text.width);
-        this.statsContainer.addChild(text);
-    } else if (showProgress) {
-        let bg = this.statsContainer.create(text.x, text.y + 1, "tile:blank");
-        bg.tint = 0x525252;
-        bg.x = 36;
-        bg.width = maxWidth - text.x - 37;
-        bg.height = 8;
-
-        let filling = this.statsContainer.create(bg.x, bg.y, "tile:blank");
-        filling.height = bg.height;
-        filling.width = (bg.width * value / max);
-        filling.tint = (label == "HP" ? 0xff322f : 0x70a426);
-
-        text = this.game.add.bitmapText(0, bg.y - 2, "font:gui", value + "/" + max, 10);
-        text.x = (bg.width/2);
-        this.statsContainer.addChild(text);
-    }
-    */
 };
