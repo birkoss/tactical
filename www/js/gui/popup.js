@@ -2,7 +2,10 @@ function Popup(game, maxWidth, maxHeight) {
     Phaser.Group.call(this, game);
 
     this.backgroundContainer = this.game.add.group();
+    this.addChild(this.backgroundContainer);
+
     this.popupContainer = this.game.add.group();
+    this.addChild(this.popupContainer);
 
     this.containers = new Array();
 
@@ -22,7 +25,7 @@ function Popup(game, maxWidth, maxHeight) {
 Popup.prototype = Object.create(Phaser.Group.prototype);
 Popup.prototype.constructor = Popup;
 
-Popup.SPEED = 800;
+Popup.SPEED = 200;
 
 Popup.prototype.setSpriteSheet = function(spriteSheet) {
     this.popupContainer.removeAll(true);
@@ -145,19 +148,24 @@ Popup.prototype.generate = function() {
     this.background.resize(this.maxWidth, (this.maxHeight == 0 ? containerY : this.maxHeight));
 
     this.popupContainer.x = (this.game.width - this.background.width) /2;
-    this.popupContainer.y = (this.game.height - this.background.height) /2;
+    //this.popupContainer.y = (this.game.height - this.background.height) /2;
 
-    this.popupContainer.destinationY = -this.popupContainer.height;
+    this.popupContainer.destinationY = this.popupContainer.height;
     this.popupContainer.originalY = this.popupContainer.y;
 
     this.popupContainer.y = this.popupContainer.destinationY;
+
+    console.log("Original/Destination: " + this.popupContainer.originalY + "/" + this.popupContainer.destinationY);
+
+    this.isGenerated = true;
 };
 
 Popup.prototype.hide = function(callback) {
+    console.log("Y:" + this.popupContainer.y);
+
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.destinationY}, Popup.SPEED, Phaser.Easing.Exponential.In);
     tween.onComplete.add(function() {
         this.onPopupHidden.dispatch(this, 0);
-        this.overlayContainer.destroy();
         this.removeAll(true);
         this.destroy();
         if (callback != null) {

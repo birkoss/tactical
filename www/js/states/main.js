@@ -1,5 +1,4 @@
 var GAME = GAME || {};
-
 GAME.Main = function() {
     this.isRunning = false;
     this.activeUnit = null;
@@ -10,11 +9,10 @@ GAME.Main.prototype = new AnimatedState();
 GAME.Main.prototype.create = function() {
     this.panelContainer = this.game.add.group();
     this.mapContainer = this.game.add.group();
-    this.informationContainer = this.game.add.group();
-    this.informationContainer.animation = AnimatedState.Animation.SlideUp;
-    this.changeSpeed(250);
+    this.popupContainer = this.game.add.group();
 
-    this.containers.push(this.informationContainer);
+    this.popupManager = new PopupManager(this.game);
+    this.popupContainer.addChild(this.popupManager);
 
     this.createPanel();
 
@@ -24,10 +22,6 @@ GAME.Main.prototype.create = function() {
     this.createUnits();
 
     //this.isRunning = true;
-
-    let popup = new PopupEntity(this.game, this.game.width, 200);
-    popup.addEntity(this.map.itemsContainer.getChildAt(0));
-    popup.show();
 };
 
 GAME.Main.prototype.update = function() {
@@ -64,8 +58,8 @@ GAME.Main.prototype.createMap = function() {
     this.map.x = (this.game.width - this.mapContainer.width) / 2;
     this.map.y = this.panelContainer.height + this.map.x;
 
-    this.informationContainer.y = this.map.y + this.map.x + this.map.height;
-    this.informationContainer.maxHeight = this.game.height - this.informationContainer.y;
+    this.popupManager.y = this.map.y + this.map.x + this.map.height;
+    this.popupManager.maxHeight = this.game.height - this.popupManager.y;
 };
 
 GAME.Main.prototype.createUnits = function() {
@@ -205,68 +199,28 @@ GAME.Main.prototype.unitStopAttack = function(effect) {
 };
 
 GAME.Main.prototype.toggleTime = function() {
-    if (!this.isRunning && this.information != null) {
-        this.hideInformation();
+    if (!this.isRunning) {
+        this.popupManager.hide();
     }
     this.isRunning = !this.isRunning;
 };
 
 GAME.Main.prototype.showInformation = function(entity) {
-    if (entity != null) {
-        /* Click on the same entity, do nothing */
-        if (this.currentEntity == entity) {
-            return ;
-        }
-        this.currentEntity = entity;
-    }
-
     /* Pause the game if not already paused */
     if (this.isRunning) {
         this.toggleTime();
     }
 
-    /* If an information is already visible */
-    if (this.informationContainer.children.length > 0) {
-        this.map.resetTiles();
-        this.hideInformation();
-    } else {
-        this.map.highlightTile(this.currentEntity.gridX, this.currentEntity.gridY);
-
-        this.information = new Panel(this.game, "gui:information", this.informationContainer.maxHeight);
-        this.informationContainer.addChild(this.information);
-
-        switch (this.currentEntity.type) {
-            case "item":
-                this.information.createTitle(this.currentEntity.data.name, 10);
-                this.information.createDescription(this.currentEntity.data.description);
-                break;
-            case "unit":
-                this.information.createTitle(this.currentEntity.data.name + " (Level " + this.currentEntity.level + ")", 10);
-
-                this.information.addStat("HP", this.currentEntity.currentStats.health, this.currentEntity.stats.health, true);
-                this.information.addStat("ATB", this.currentEntity.ATB, this.currentEntity.getMaxATB(), true);
-                this.information.addStat("ATK", this.currentEntity.stats.attack, this.currentEntity.getAttack());
-                this.information.addStat("DEF", this.currentEntity.stats.defense, this.currentEntity.getDefense());
-
-                this.information.statsContainer.y = this.information.title.y + this.information.title.height + 12;
-
-                break;
+    let canOpen = true;
+    this.popupManager.popups.forEach(function(single_popup) {
+        if (single_popup.entity == entity) {
+            canOpen = false;
         }
-        console.log(this.currentEntity);
+    }, this);
 
-        this.show();
+    if (canOpen) {
+        let popup = new PopupEntity(this.game, this.game.width, this.popupManager.maxHeight);
+        popup.addEntity(entity);
+        this.popupManager.addPopup(popup);
     }
-};
-
-GAME.Main.prototype.hideInformation = function() {
-    this.map.resetTiles();
-    if (this.information != null) {
-        this.hide(this.resetInformation, this);
-    }
-};
-
-GAME.Main.prototype.resetInformation = function() {
-    this.informationContainer.removeAll();
-    this.information.destroy();
-    this.showInformation();
 };

@@ -31,6 +31,8 @@ PopupEntity.prototype.addProgressBar = function(x, y, maxWidth, value, max, colo
 };
 
 PopupEntity.prototype.addEntity = function(entity) {
+    this.entity = entity;
+
     let title = this.getContainer("title").group;
 
     let text;
@@ -77,4 +79,16 @@ PopupEntity.prototype.addEntity = function(entity) {
             description.addChild(text);
             break;
     }
+};
+
+PopupEntity.prototype.show = function() {
+    this.entity.parent.parent.highlightTile(this.entity.gridX, this.entity.gridY);
+
+    Popup.prototype.show.call(this)
+};
+
+PopupEntity.prototype.hide = function() {
+    this.entity.parent.parent.resetTiles();
+
+    Popup.prototype.hide.call(this)
 };
