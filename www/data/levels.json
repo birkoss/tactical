@@ -1,16 +1,38 @@
 {
     "level1": {
+        "theme": "forest",
+        "items": [
+            {
+                "item": "tree",
+                "gridX": 0,
+                "gridY": 0
+            },
+            {
+                "item": "tree",
+                "gridX": 5,
+                "gridY": 4
+            },
+            {
+                "item": "tree",
+                "gridX": 2,
+                "gridY": 0
+            }
+        ],
         "units": [
             {
                 "unit": "skeleton",
-                "gridX": 5,
+                "gridX": 4,
                 "gridY": 5
             },
             {
                 "unit": "skeleton",
-                "gridX": 5,
+                "gridX": 4,
                 "gridY": 4
             }
+        ],
+        "base": [
+            {"gridX":2, "gridY":2},
+            {"gridX":1, "gridY":1}
         ]
     }
 }

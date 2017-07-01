@@ -17,6 +17,8 @@ GAME.Main.prototype.create = function() {
 
     this.createPanel();
 
+    this.level = "level1";
+
     this.createMap();
     this.createUnits();
 
@@ -46,11 +48,11 @@ GAME.Main.prototype.createMap = function() {
     this.map.onMapClicked.add(this.showInformation, this);
 
     this.map.createGrid(6, 7);
-    this.map.setTheme("forest");
+    this.map.setTheme(GAME.json.levels[this.level].theme);
 
-    this.map.addItem("tree", 0, 0);
-    this.map.addItem("tree", 5, 4);
-    this.map.addItem("tree", 2, 0);
+    GAME.json.levels[this.level].items.forEach(function(single_item) {
+        this.map.addItem(single_item.item, single_item.gridX, single_item.gridY);
+    }, this);
 
     this.map.generate();
 
@@ -67,29 +69,24 @@ GAME.Main.prototype.createUnits = function() {
     command.target = Command.Target.Foe;
     command.action = Command.Action.Attack;
 
-    let unit = new Unit(this.game, "knight", Unit.Team.Player);
-    unit.addCommand(command);
-    unit.gridX = 5;
-    unit.gridY = 5;
-    this.map.addUnit(unit);
+    GAME.json.levels[this.level].units.forEach(function(single_unit) {
+        let unit = new Unit(this.game, single_unit.unit, Unit.Team.Enemy);
+        unit.addCommand(command);
+        unit.gridX = single_unit.gridX;
+        unit.gridY = single_unit.gridY;
+        this.map.addUnit(unit);
+    }, this);
 
-    unit = new Unit(this.game, "archer", Unit.Team.Player);
-    unit.addCommand(command);
-    unit.gridX = 2;
-    unit.gridY = 2;
-    this.map.addUnit(unit);
+    GAME.json.levels[this.level].base.forEach(function(single_base, index) {
+        let single_unit = GAME.config.party[index];
+        let unit = new Unit(this.game, single_unit.unit, Unit.Team.Player);
+        unit.addCommand(command);
+        unit.gridX = single_base.gridX;
+        unit.gridY = single_base.gridY;
+        this.map.addUnit(unit);
+        unit.face(Entity.Facing.Right);
+    }, this);
 
-    unit = new Unit(this.game, "thief", Unit.Team.Player);
-    unit.addCommand(command);
-    unit.gridX = 4;
-    unit.gridY = 1;
-    this.map.addUnit(unit);
-
-    unit = new Unit(this.game, "skeleton", Unit.Team.Enemy);
-    unit.addCommand(command);
-    unit.gridX = 4;
-    unit.gridY = 5;
-    this.map.addUnit(unit);
 };
 
 GAME.Main.prototype.unitStartAction = function(unit) {
