@@ -12,6 +12,14 @@ GAME.config = {
     puzzles: []
 };
 
+GAME.config.party = [{
+    "unit":"knight",
+    "xp":0
+},{
+    "unit":"archer",
+    "xp":0
+}];
+
 GAME.scale = {sprite:3, normal:1};
 GAME.scale.normal = Math.max(1, Math.min(6, Math.floor(window.innerWidth / 320) * 2));
 

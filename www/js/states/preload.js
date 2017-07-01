@@ -35,11 +35,13 @@ GAME.Preload.prototype = {
 
         this.load.json("data:items", "data/items.json");
         this.load.json("data:units", "data/units.json");
+        this.load.json("data:levels", "data/levels.json");
     },
     create: function() {
         GAME.json = {};
         GAME.json['items'] = this.cache.getJSON("data:items");
         GAME.json['units'] = this.cache.getJSON("data:units");
+        GAME.json['levels'] = this.cache.getJSON("data:levels");
 
         this.state.start("Main");
     }
