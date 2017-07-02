@@ -60,7 +60,8 @@ Unit.Team = {
 
 Unit.prototype.createProgress = function() {
     this.moveProgress = this.moveContainer.create(0, 0, "tile:blank");
-    this.moveProgress.width = this.moveProgress.maxWidth = 48;
+    this.moveProgress.width = 0;
+    this.moveProgress.maxWidth = 48;
     this.moveProgress.height = 6;
     this.moveProgress.tint = 0xff322f;
 };
