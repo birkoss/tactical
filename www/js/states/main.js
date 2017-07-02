@@ -118,11 +118,7 @@ GAME.Main.prototype.unitExecuteCommand = function() {
                     if (units.length > 0) {
                         command = true;
                         this.unitStartAttack(this.activeUnit, units[0]);
-                        //this.activeUnit.attackUnit(units[0]);
                     }
-                    units.forEach(function(single_unit) {
-                        console.log(" = " + single_unit.team + " -> " + single_unit.gridX + "x" + single_unit.gridY);
-                    }, this);
                     break;
                 case Command.Action.Heal:
                     break;
@@ -130,8 +126,22 @@ GAME.Main.prototype.unitExecuteCommand = function() {
         }
     }, this);
 
+    /* No command found ... */
     if (command == null) {
-        /* No command found, skip it */
+        if (this.activeUnit.team == Unit.Team.Enemy) {
+            /* Try to find a target */
+            let newPosition = null;
+            this.map.getUnits(this.activeUnit.team * -1).forEach(function(single_unit) {
+                let neighboors = this.map.getNeighboors(single_unit.gridX, single_unit.gridY);
+                if (newPosition == null && neighboors.length > 0) {
+                    newPosition = neighboors[0];
+                }
+            }, this);
+
+            if (newPosition != null) {
+                this.activeUnit.move(newPosition.gridX, newPosition.gridY);
+            }
+        }
         this.unitStopAction();
     }
 };

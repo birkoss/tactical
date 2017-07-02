@@ -17,8 +17,7 @@ function Map(game) {
     this.addChild(this.effectsContainer);
 
     this.onUnitReady = new Phaser.Signal();
-
-    this.onMapClicked = new Phaser.Signal();
+this.onMapClicked = new Phaser.Signal();
     this.selectedPosition = null;
 };
 
@@ -265,4 +264,20 @@ Map.prototype.resumeUnits = function() {
     this.unitsContainer.forEach(function(single_unit) {
         single_unit.resume();
     }, this);
+};
+
+Map.prototype.getNeighboors = function(gridX, gridY) {
+    let neighboors = [];
+    for (let y=-1; y<=1; y++) {
+        for (let x=-1; x<=1; x++) {
+            if (Math.abs(x) != Math.abs(y)) {
+                let nx = x + gridX;
+                let ny = y + gridY;
+                if (this.isEmptyAt(nx, ny) && this.isInBound(nx, ny)) {
+                    neighboors.push({gridX:nx, gridY:ny});
+                }
+            }
+        }
+    }
+    return neighboors;
 };
