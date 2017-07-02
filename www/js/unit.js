@@ -18,9 +18,15 @@ function Unit(game, unitID, newTeam) {
         defense: 7,
         health: 15
     };
-    if (GAME.json.units[this.entityID].stats != null) {
-        this.baseStats = GAME.json.units[this.entityID].stats;
+
+    let unitData = GAME.json.units[this.entityID];
+    if (unitData.stats != null) {
+        this.baseStats = unitData.stats;
     }
+    if (unitData.range != null) {
+        this.attackRange = unitData.range;
+    }
+
     this.stats = {};
 
     this.xp = {
