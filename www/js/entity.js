@@ -60,12 +60,12 @@ Entity.prototype.move = function(gridX, gridY) {
     this.y = this.gridY * Math.abs(this.backgroundContainer.getChildAt(0).height);
 };
 
-Entity.prototype.freeze = function() {
+Entity.prototype.pause = function() {
     console.log("freeze");
     this.backgroundContainer.getChildAt(0).animations.paused = true;
 };
 
-Entity.prototype.animate = function() {
+Entity.prototype.resume = function() {
     if (this.backgroundContainer.getChildAt(0).animations.paused) {
         this.backgroundContainer.getChildAt(0).animations.paused = false;
     }

@@ -1,6 +1,6 @@
 var GAME = GAME || {};
 GAME.Main = function() {
-    this.isRunning = false;
+    this.isRunning = true;
     this.activeUnit = null;
 };
 
@@ -21,6 +21,7 @@ GAME.Main.prototype.create = function() {
     this.createMap();
     this.createUnits();
 
+    this.toggleTime();
     //this.isRunning = true;
 };
 
@@ -203,6 +204,12 @@ GAME.Main.prototype.toggleTime = function() {
         this.popupManager.hide();
     }
     this.isRunning = !this.isRunning;
+
+    if (this.isRunning) {
+        this.map.resumeUnits();
+    } else {
+        this.map.pauseUnits();
+    }
 };
 
 GAME.Main.prototype.showInformation = function(entity) {

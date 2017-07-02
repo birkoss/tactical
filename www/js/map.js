@@ -254,3 +254,15 @@ Map.prototype.resetTiles = function() {
         single_tile.deactivate();
     }, this);
 };
+
+Map.prototype.pauseUnits = function() {
+    this.unitsContainer.forEach(function(single_unit) {
+        single_unit.pause();
+    }, this);
+};
+
+Map.prototype.resumeUnits = function() {
+    this.unitsContainer.forEach(function(single_unit) {
+        single_unit.resume();
+    }, this);
+};

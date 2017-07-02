@@ -1,6 +1,9 @@
 function Unit(game, unitID, newTeam) {
     Entity.call(this, game, "unit");
 
+    this.moveContainer = this.game.add.group();
+    this.addChild(this.moveContainer);
+
     this.entityID = unitID;
 
     this.onDeath = new Phaser.Signal();
@@ -37,6 +40,8 @@ function Unit(game, unitID, newTeam) {
 
     this.clearATB();
     this.MOVE = 100;
+
+    this.createProgress();
 };
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -45,6 +50,13 @@ Unit.prototype.constructor = Unit;
 Unit.Team = {
     Player: 1,
     Enemy: 2
+};
+
+Unit.prototype.createProgress = function() {
+    this.moveProgress = this.moveContainer.create(0, 0, "tile:blank");
+    this.moveProgress.width = this.moveProgress.maxWidth = 48;
+    this.moveProgress.height = 6;
+    this.moveProgress.tint = 0xff322f;
 };
 
 Unit.prototype.applyDamage = function(damage) {
@@ -134,7 +146,6 @@ Unit.prototype.canMove = function() {
 
 Unit.prototype.clearMove = function() {
     this.MOVE = 0;
-    this.freeze();
 };
 
 Unit.prototype.getFillRateMove = function() {
@@ -143,9 +154,7 @@ Unit.prototype.getFillRateMove = function() {
 
 Unit.prototype.updateMove = function() {
     this.MOVE = Math.min(this.MOVE + this.getFillRateMove(), 100);
-    if (this.canMove()) {
-        this.animate();
-    }
+    this.moveProgress.width = this.moveProgress.maxWidth - (this.MOVE / 100 * this.moveProgress.maxWidth);
 };
 
 /* Commands */
