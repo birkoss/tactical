@@ -59,3 +59,14 @@ Entity.prototype.move = function(gridX, gridY) {
     this.x = this.gridX * Math.abs(this.backgroundContainer.getChildAt(0).width);
     this.y = this.gridY * Math.abs(this.backgroundContainer.getChildAt(0).height);
 };
+
+Entity.prototype.freeze = function() {
+    console.log("freeze");
+    this.backgroundContainer.getChildAt(0).animations.paused = true;
+};
+
+Entity.prototype.animate = function() {
+    if (this.backgroundContainer.getChildAt(0).animations.paused) {
+        this.backgroundContainer.getChildAt(0).animations.paused = false;
+    }
+};

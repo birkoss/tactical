@@ -122,6 +122,7 @@ Map.prototype.updateUnits = function() {
         this.unitsContainer.forEach(function(single_unit) {
             if (single_unit.isAlive()) {
                 single_unit.updateATB();
+                single_unit.updateMove();
             }
         }, this);
     } else {
@@ -174,7 +175,7 @@ Map.prototype.selectItem = function(item, pointer) {
     if (entities.length > 0) {
         this.onMapClicked.dispatch(entities[0]);
 
-        if (entities[0].type == "unit" && entities[0].team == Unit.Team.Player) {
+        if (entities[0].type == "unit" && entities[0].team == Unit.Team.Player && entities[0].canMove()) {
             console.log("Allow drag");
             this.game.input.addMoveCallback(this.followUnit, this);
             this.isDragging = false;
@@ -201,6 +202,12 @@ Map.prototype.followUnit = function(pointer) {
 
 Map.prototype.releaseItem = function(item, pointer) {
     if (this.isDragging != null) {
+        let entities = this.getEntitiesAt(this.selectedPosition.gridX, this.selectedPosition.gridY);
+        if (entities.length > 0) {
+            entities[0].clearMove();
+            /* Moving kinda count like a move, so reset the ATB */
+            entities[0].clearATB();
+        }
         console.log("Disable drag");
         this.game.input.deleteMoveCallback(this.followUnit, this);
 

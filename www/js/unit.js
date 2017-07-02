@@ -36,6 +36,7 @@ function Unit(game, unitID, newTeam) {
     this.team = newTeam;
 
     this.clearATB();
+    this.MOVE = 100;
 };
 
 Unit.prototype = Object.create(Entity.prototype);
@@ -69,9 +70,6 @@ Unit.prototype.isAlive = function() {
     return (this.currentStats.health > 0);
 };
 
-Unit.prototype.canMove = function() {
-    //return this.
-};
 
 Unit.prototype.die = function() {
     this.clearATB();
@@ -126,6 +124,28 @@ Unit.prototype.isReady = function() {
 
 Unit.prototype.updateATB = function() {
     this.ATB = Math.min(this.ATB + this.getFillRateATB(), this.getMaxATB());
+};
+
+/* Movement */
+
+Unit.prototype.canMove = function() {
+    return (this.MOVE >= 100);
+};
+
+Unit.prototype.clearMove = function() {
+    this.MOVE = 0;
+    this.freeze();
+};
+
+Unit.prototype.getFillRateMove = function() {
+    return 1;
+};
+
+Unit.prototype.updateMove = function() {
+    this.MOVE = Math.min(this.MOVE + this.getFillRateMove(), 100);
+    if (this.canMove()) {
+        this.animate();
+    }
 };
 
 /* Commands */
