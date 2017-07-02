@@ -69,6 +69,14 @@ Map.prototype.generate = function() {
     image.events.onInputUp.add(this.releaseItem, this);
 };
 
+Map.prototype.isEmptyAt = function(gridX, gridY) {
+    return (this.getEntitiesAt(gridX, gridY).length == 0);
+};
+
+Map.prototype.isInBound = function(gridX, gridY) {
+    return (gridX >= 0 && gridY >= 0 && gridX < this.gridWidth && gridY < this.gridHeight);
+};
+
 Map.prototype.addItem = function(itemID, gridX, gridY) {
     if (this.getItemAt(gridX, gridY).length == 0) {
         let item = new Entity(this.game, "item");
@@ -159,38 +167,69 @@ Map.prototype.getItemAt = function(gridX, gridY) {
 
 Map.prototype.selectItem = function(item, pointer) {
     this.selectedPosition = this.getPositionFromXY(pointer.x - this.x, pointer.y - this.y);
+
+    let entities = this.getEntitiesAt(this.selectedPosition.gridX, this.selectedPosition.gridY);
+
+    this.isDragging = null;
+    if (entities.length > 0) {
+        this.onMapClicked.dispatch(entities[0]);
+
+        if (entities[0].type == "unit" && entities[0].team == Unit.Team.Player) {
+            console.log("Allow drag");
+            this.game.input.addMoveCallback(this.followUnit, this);
+            this.isDragging = false;
+        }
+    }
 };
 
-Map.prototype.releaseItem = function(item, pointer) {
-    if (this.selectedPosition != null) {
-        let position = this.getPositionFromXY(pointer.x - this.x, pointer.y - this.y);
+Map.prototype.followUnit = function(pointer) {
+    let position = this.getPositionFromXY(pointer.x - this.x, pointer.y - this.y);
+    if (position != null && (this.selectedPosition.gridX != position.gridX || this.selectedPosition.gridY != position.gridY)) {
+        this.isDragging = true;
 
-        if (this.selectedPosition.gridX == position.gridX && this.selectedPosition.gridY == position.gridY) {
-            let items = [];
-
-            /* Verify the items */
-            items = items.concat(this.itemsContainer.filter(function(single_item) {
-                if (single_item.gridX == position.gridX && single_item.gridY == position.gridY) {
-                    return true;
-                }
-                return false;
-            }, this).list);
-
-            /* Verify the units */
-            items = items.concat(this.unitsContainer.filter(function(single_unit) {
-                if (single_unit.gridX == position.gridX && single_unit.gridY == position.gridY) {
-                    return true;
-                }
-                return false;
-            }, this).list);
-
-            if (items.length > 0) {
-                this.onMapClicked.dispatch(items[0]);
+        if (this.isInBound(position.gridX, position.gridY) && this.isEmptyAt(position.gridX, position.gridY)) {
+            let entities = this.getEntitiesAt(this.selectedPosition.gridX, this.selectedPosition.gridY);
+            if (entities.length > 0) {
+                entities[0].move(position.gridX, position.gridY);
+                this.selectedPosition = position;
+                this.resetTiles();
+                this.highlightTile(position.gridX, position.gridY);
             }
         }
     }
+};
+
+Map.prototype.releaseItem = function(item, pointer) {
+    if (this.isDragging != null) {
+        console.log("Disable drag");
+        this.game.input.deleteMoveCallback(this.followUnit, this);
+
+        this.isDragging = null;
+    }
 
     this.selectedPosition = null;
+};
+
+Map.prototype.getEntitiesAt = function(gridX, gridY) {
+    let entities = [];
+
+    /* Verify the items */
+    entities = entities.concat(this.itemsContainer.filter(function(single_item) {
+        if (single_item.gridX == gridX && single_item.gridY == gridY) {
+            return true;
+        }
+        return false;
+    }, this).list);
+
+    /* Verify the units */
+    entities = entities.concat(this.unitsContainer.filter(function(single_unit) {
+        if (single_unit.gridX == gridX && single_unit.gridY == gridY) {
+            return true;
+        }
+        return false;
+    }, this).list);
+
+    return entities;
 };
 
 Map.prototype.getPositionFromXY = function(x, y) {

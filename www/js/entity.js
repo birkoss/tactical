@@ -42,8 +42,7 @@ Entity.prototype.draw = function(gridX, gridY) {
     image.animations.add("idle");
     image.animations.play("idle", 2, true);
 
-    this.x = this.gridX * image.width;
-    this.y = this.gridY * image.height;
+    this.move(this.gridX, this.gridY);
 };
 
 Entity.prototype.face = function(newFacing) {
@@ -51,4 +50,12 @@ Entity.prototype.face = function(newFacing) {
         this.backgroundContainer.getChildAt(0).scale.x = newFacing;
         this.facing = newFacing;
     }
+};
+
+Entity.prototype.move = function(gridX, gridY) {
+    this.gridX = gridX;
+    this.gridY = gridY;
+
+    this.x = this.gridX * Math.abs(this.backgroundContainer.getChildAt(0).width);
+    this.y = this.gridY * Math.abs(this.backgroundContainer.getChildAt(0).height);
 };
